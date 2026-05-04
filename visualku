@@ -1,0 +1,2240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:version='2' class='v2' expr:lang='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta charset='UTF-8'/>
+  <meta content='width=device-width, initial-scale=1.0' name='viewport'/>
+  <meta content='Percetakan &amp; Desain Grafis Profesional di Samarinda' name='description'/>
+  <title><data:blog.pageTitle/></title>
+  
+  <!-- Preconnect untuk performa -->
+  <link href='https://fonts.googleapis.com' rel='preconnect'/>
+  <link crossorigin='anonymous' href='https://fonts.gstatic.com' rel='preconnect'/>
+  <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap' rel='stylesheet'/>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' rel='stylesheet'/>
+  
+  <!-- GSAP & Lenis untuk animasi premium -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js'></script>
+  <script src='https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js'></script>
+
+  <b:skin><![CDATA[
+    /* ============================================
+       VISUALKU 2026 - MODERN LUXURY REDESIGN
+       Design System: Premium Printing & Creative Agency
+       ============================================ */
+
+    :root {
+      /* Color Palette - Split Complementary Luxury */
+      --primary: #0F172A;
+      --primary-light: #1E293B;
+      --primary-dark: #020617;
+      
+      --secondary: #F59E0B;
+      --secondary-light: #FBBF24;
+      --secondary-dark: #D97706;
+      
+      --accent: #0EA5E9;
+      --accent-light: #38BDF8;
+      --accent-dark: #0284C7;
+      
+      --white: #FFFFFF;
+      --off-white: #F8FAFC;
+      --gray-50: #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1E293B;
+      --gray-900: #0F172A;
+      
+      /* Glassmorphism */
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+      --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.3);
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --radius-full: 9999px;
+      
+      /* Typography */
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Spacing */
+      --container-max: 1400px;
+      --section-padding: 120px;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html { 
+      scroll-behavior: smooth; 
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body { 
+      font-family: var(--font-sans); 
+      background: var(--gray-50); 
+      color: var(--gray-800); 
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor-dot,
+    .cursor-outline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      z-index: 9999;
+      pointer-events: none;
+      transition: transform var(--transition-fast);
+    }
+
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--secondary);
+    }
+
+    .cursor-outline {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      transition: width var(--transition-base), height var(--transition-base), background-color var(--transition-base);
+    }
+
+    .cursor-outline.hover {
+      width: 60px;
+      height: 60px;
+      background-color: rgba(245, 158, 11, 0.1);
+      border-color: var(--secondary);
+    }
+
+    @media (pointer: coarse) {
+      body { cursor: auto; }
+      .cursor-dot, .cursor-outline { display: none; }
+    }
+
+    /* Scroll Progress */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      z-index: 10000;
+      transition: width 0.1s linear;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--primary);
+    }
+
+    a { 
+      text-decoration: none; 
+      color: inherit; 
+      transition: var(--transition-base);
+    }
+
+    img { 
+      max-width: 100%; 
+      height: auto; 
+      display: block; 
+      object-fit: cover;
+    }
+
+    /* ===== CONTAINER & UTILITIES ===== */
+    .container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: var(--section-padding) 0;
+      position: relative;
+    }
+
+    .section-white { background: var(--white); }
+    .section-gray { background: var(--gray-50); }
+    .section-dark { 
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+    }
+
+    .text-center { text-align: center; }
+    .text-gradient {
+      background: linear-gradient(135deg, var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Section Header */
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 64px;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(14, 165, 233, 0.1));
+      color: var(--secondary);
+      padding: 8px 20px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+      color: var(--gray-600);
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .section-dark .section-subtitle {
+      color: var(--gray-300);
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: all var(--transition-base);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+      color: var(--primary);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--glass-bg);
+      color: var(--white);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--secondary);
+      transform: translateY(-3px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--gray-200);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--secondary);
+      background: rgba(245, 158, 11, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-whatsapp:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(37, 211, 102, 0.4);
+    }
+
+    /* Magnetic Button Effect */
+    .magnetic-btn {
+      transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    /* ===== HEADER / NAVIGATION ===== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 24px 0;
+      transition: all var(--transition-base);
+    }
+
+    .header.scrolled {
+      padding: 12px 0;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-sm);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .header-dark.scrolled {
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo img {
+      height: 48px;
+      width: auto;
+      transition: transform var(--transition-base);
+    }
+
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-link {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--gray-600);
+      position: relative;
+      padding: 8px 0;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      transition: width var(--transition-base);
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .header-dark .nav-link {
+      color: var(--gray-300);
+    }
+
+    .header-dark .nav-link:hover {
+      color: var(--white);
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+      color: var(--primary) !important;
+      padding: 12px 28px !important;
+      border-radius: var(--radius-full);
+      font-weight: 700 !important;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+    }
+
+    .nav-cta::after {
+      display: none !important;
+    }
+
+    /* Mobile Menu */
+    .burger {
+      display: none;
+      cursor: pointer;
+      z-index: 1001;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+    }
+
+    .burger span {
+      width: 28px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: all var(--transition-base);
+    }
+
+    .header-dark .burger span {
+      background: var(--white);
+    }
+
+    .burger.toggle span:nth-child(1) {
+      transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .burger.toggle span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .burger.toggle span:nth-child(3) {
+      transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding-top: 80px;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+    }
+
+    .hero-video video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.85) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 24px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      padding: 10px 24px;
+      border-radius: var(--radius-full);
+      color: var(--secondary-light);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+      border: 1px solid var(--glass-border);
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .hero-badge i {
+      color: var(--secondary);
+      animation: pulse 2s infinite;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 24px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--secondary-light), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--gray-300);
+      margin-bottom: 48px;
+      font-weight: 400;
+      line-height: 1.8;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    .scroll-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--secondary), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+
+    /* ===== PRODUCTS SECTION ===== */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all var(--transition-base);
+      border: 1px solid var(--gray-100);
+      position: relative;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      transform: scaleX(0);
+      transition: transform var(--transition-base);
+      z-index: 1;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--secondary);
+    }
+
+    .product-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .product-image {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .product-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .product-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.85), transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition-base);
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+      z-index: 2;
+    }
+
+    .product-card:hover .product-overlay {
+      opacity: 1;
+    }
+
+    .product-overlay span {
+      color: var(--white);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .product-info {
+      padding: 24px;
+    }
+
+    .product-card h3 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .product-meta {
+      color: var(--gray-600);
+      font-size: 0.95rem;
+    }
+
+    /* ===== GALLERY SLIDER ===== */
+    .gallery-wrapper {
+      margin-top: 64px;
+      padding: 48px 0;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .gallery-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .gallery-header h3 {
+      font-size: 1.75rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .gallery-header p {
+      color: var(--gray-600);
+    }
+
+    .gallery-slider {
+      overflow: hidden;
+      position: relative;
+      mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    }
+
+    .gallery-track {
+      display: flex;
+      gap: 20px;
+      animation: gallery-scroll 35s linear infinite;
+      width: fit-content;
+    }
+
+    .gallery-track:hover {
+      animation-play-state: paused;
+    }
+
+    .gallery-item {
+      flex-shrink: 0;
+      width: 320px;
+      height: 220px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+      transition: transform var(--transition-base);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.03);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.4s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+
+    @keyframes gallery-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .gallery-cta {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    /* ===== SERVICES SECTION ===== */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .service-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 2px solid transparent;
+      transition: all var(--transition-base);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(14, 165, 233, 0.05));
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--secondary);
+    }
+
+    .service-card:hover::before {
+      opacity: 1;
+    }
+
+    .service-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, var(--secondary-light), var(--accent-light));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 1.8rem;
+      color: var(--primary);
+      transition: transform 0.5s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .service-card:hover .service-icon {
+      transform: rotateY(360deg);
+    }
+
+    .service-card h3 {
+      font-size: 1.4rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .service-card p {
+      color: var(--gray-600);
+      line-height: 1.8;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .service-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--secondary);
+      font-weight: 700;
+      transition: gap var(--transition-base);
+      position: relative;
+      z-index: 1;
+    }
+
+    .service-card:hover .service-cta {
+      gap: 16px;
+    }
+
+    /* ===== MODAL SYSTEM ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      max-width: 850px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      transform: scale(0.95) translateY(20px);
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      background: var(--gray-100);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--gray-600);
+      transition: all var(--transition-base);
+      z-index: 10;
+    }
+
+    .modal-close:hover {
+      background: var(--gray-200);
+      transform: rotate(90deg);
+      color: var(--primary);
+    }
+
+    .modal-body {
+      padding: 56px 40px 40px;
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .modal-header h2 {
+      font-size: 2rem;
+      color: var(--primary);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .modal-header p {
+      color: var(--gray-600);
+      font-size: 1.05rem;
+    }
+
+    .modal-image {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin: 32px 0;
+    }
+
+    .modal-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: var(--gray-50);
+      border-radius: var(--radius);
+      transition: all var(--transition-base);
+    }
+
+    .modal-feature:hover {
+      background: var(--gray-100);
+      transform: translateX(8px);
+    }
+
+    .modal-feature i {
+      font-size: 1.4rem;
+      color: var(--secondary);
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .modal-feature h4 {
+      font-size: 1.05rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .modal-feature p {
+      color: var(--gray-600);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .modal-cta {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 2px solid var(--gray-100);
+    }
+
+    /* ===== TESTIMONIALS SLIDER ===== */
+    .testimonials-slider {
+      overflow: hidden;
+      position: relative;
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .testimonials-track {
+      display: flex;
+      gap: 24px;
+      animation: scroll-testimonials 30s linear infinite;
+      width: fit-content;
+    }
+
+    .testimonials-track:hover {
+      animation-play-state: paused;
+    }
+
+    .testimonial-item {
+      flex-shrink: 0;
+      width: 280px;
+      height: auto;
+      padding: 8px;
+    }
+
+    .testimonial-item img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition: transform var(--transition-base);
+    }
+
+    .testimonial-item:hover img {
+      transform: scale(1.03);
+    }
+
+    @keyframes scroll-testimonials {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ===== CLIENTS LOGOS ===== */
+    .clients-section {
+      background: var(--white);
+      padding: 64px 0;
+    }
+
+    .client-title {
+      text-align: center;
+      font-weight: 700;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+    }
+
+    .logo-slider {
+      overflow: hidden;
+      position: relative;
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .logo-track {
+      display: flex;
+      gap: 56px;
+      animation: scroll-logos 25s linear infinite;
+      width: fit-content;
+    }
+
+    .logo-track:hover {
+      animation-play-state: paused;
+    }
+
+    .logo-item {
+      flex-shrink: 0;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-item img {
+      height: 100%;
+      width: auto;
+      filter: grayscale(100%);
+      opacity: 0.5;
+      transition: all var(--transition-base);
+    }
+
+    .logo-item:hover img {
+      filter: grayscale(0%);
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    @keyframes scroll-logos {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ===== CTA SECTION ===== */
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 100px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before,
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.1;
+    }
+
+    .cta-section::before {
+      top: -30%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+    }
+
+    .cta-section::after {
+      bottom: -30%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .cta-text {
+      max-width: 600px;
+      margin: 0 auto 36px;
+      opacity: 0.9;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--primary);
+      color: var(--gray-300);
+      padding: 80px 0 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 64px;
+      padding-bottom: 64px;
+    }
+
+    .footer-brand .logo-footer {
+      display: inline-flex;
+      margin-bottom: 24px;
+    }
+
+    .footer-brand .logo-footer img {
+      height: 48px;
+      width: auto;
+    }
+
+    .footer-brand p {
+      margin-bottom: 28px;
+      line-height: 1.9;
+      font-size: 0.95rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      color: var(--gray-300);
+      font-size: 1.1rem;
+      transition: all var(--transition-base);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .social-link:hover {
+      background: var(--secondary);
+      color: var(--primary);
+      transform: translateY(-4px);
+      border-color: var(--secondary);
+    }
+
+    .footer-col h4 {
+      font-size: 1.15rem;
+      color: var(--white);
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 16px;
+    }
+
+    .footer-col a {
+      color: var(--gray-300);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all var(--transition-base);
+      font-size: 0.95rem;
+    }
+
+    .footer-col a:hover {
+      color: var(--secondary);
+      padding-left: 8px;
+    }
+
+    .footer-col a i {
+      width: 20px;
+      color: var(--secondary);
+    }
+
+    .footer-bottom {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 28px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-bottom .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .copyright {
+      font-size: 0.9rem;
+      color: var(--gray-400);
+    }
+
+    .payment-methods img {
+      height: 32px;
+      opacity: 0.7;
+      transition: opacity var(--transition-base);
+    }
+
+    .payment-methods img:hover {
+      opacity: 1;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.15); }
+    }
+
+    @keyframes scrollLine {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(20px); opacity: 0; }
+    }
+
+    /* Reveal on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --section-padding: 80px;
+      }
+
+      .burger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 85%;
+        max-width: 420px;
+        height: 100vh;
+        background: var(--white);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 100px 32px 32px;
+        box-shadow: var(--shadow-xl);
+        transition: right var(--transition-base);
+        z-index: 1000;
+      }
+
+      .nav-links.nav-active {
+        right: 0;
+      }
+
+      .nav-link {
+        font-size: 1.1rem;
+        padding: 16px 0;
+        width: 100%;
+        border-bottom: 1px solid var(--gray-100);
+      }
+
+      .nav-link::after {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .products-grid,
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-body {
+        padding: 40px 24px 24px;
+      }
+
+      .modal-features {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-item {
+        width: 260px;
+        height: 180px;
+      }
+
+      .footer-bottom .container {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 16px;
+      }
+
+      .section {
+        padding: 64px 0;
+      }
+
+      .hero {
+        padding-top: 60px;
+        min-height: 90vh;
+      }
+
+      .hero-buttons .btn {
+        padding: 14px 28px;
+        font-size: 0.9rem;
+      }
+
+      .section-title {
+        font-size: clamp(1.5rem, 5vw, 2.25rem);
+      }
+
+      .product-card {
+        border-radius: var(--radius);
+      }
+
+      .service-card {
+        padding: 32px 24px;
+      }
+    }
+
+    /* Hide Blogger default elements */
+    .post-footer, .comments, .feed-links, .blog-pager {
+      display: none !important;
+    }
+
+    /* Lenis smooth scroll */
+    html.lenis {
+      height: auto;
+    }
+    .lenis.lenis-smooth {
+      scroll-behavior: auto;
+    }
+    .lenis.lenis-stopped {
+      overflow: hidden;
+    }
+  ]]></b:skin>
+</head>
+
+<body>
+  <!-- Custom Cursor -->
+  <div class='cursor-dot'></div>
+  <div class='cursor-outline'></div>
+  
+  <!-- Scroll Progress -->
+  <div class='scroll-progress'></div>
+
+  <!-- Header -->
+  <header class='header header-dark' id='header'>
+    <div class='container'>
+      <nav class='navbar'>
+        <a class='logo' href='/'>
+          <img alt='Visualku Logo' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpjsvDiZSpNbnrWGlktepzcpqd-ptkaePVf6nRbmfNRClDYOHhyphenhyphen_VjoCJBUJcorO1izKFVFiPQ2BS8nLpJ2wWZvNIUmKkyl1b20lFak0J_NmPhJcKWp6BGJccw-dUvmkmf42nRCtf4sOVtc1QAd90FDHrN6uWgmzwVzC3URYEVS-T45HxTqiBdkhd9Y7c/s4633/Visualku%20Logo-.png'/>
+        </a>
+
+        <div class='nav-links' id='navLinks'>
+          <a class='nav-link' href='#produk'>Produk</a>
+          <a class='nav-link' href='#layanan'>Layanan</a>
+          <a class='nav-link' href='#clients'>Klien</a>
+          <a class='nav-link' href='#testimoni'>Testimoni</a>
+          <a class='nav-link' href='https://www.visualku.com/p/the-history-of-visualku.html'>Tentang</a>
+          <a class='nav-link nav-cta magnetic-btn' href='#kontak'>Kontak</a>
+        </div>
+
+        <div class='burger' id='burger'>
+          <span class='line1'></span>
+          <span class='line2'></span>
+          <span class='line3'></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <b:if cond='data:view.isHomepage'>
+      
+      <!-- Hero Section -->
+      <section class='hero'>
+        <div class='hero-video'>
+          <video autoplay='autoplay' loop='loop' muted='muted' playsinline='playsinline'>
+            <source src='https://abilalmagic.github.io/sulapgagal/visualprint.mp4' type='video/mp4'/>
+          </video>
+        </div>
+        <div class='hero-overlay'></div>
+        
+        <div class='hero-content'>
+          <div class='hero-badge reveal'>
+            <i class='fas fa-star'></i> Trusted Since 2010
+          </div>
+          <h1 class='hero-title reveal'>
+            Percetakan <span>Samarinda</span>
+          </h1>
+          <p class='hero-subtitle reveal'>
+            Solusi cetak dan desain kreatif untuk bisnis Anda. 
+            Kualitas premium, pengerjaan cepat, hasil memuaskan.
+          </p>
+          <div class='hero-buttons reveal'>
+            <a class='btn btn-primary magnetic-btn' href='#produk'>
+              <i class='fas fa-shopping-bag'></i> Lihat Produk
+            </a>
+            <a class='btn btn-secondary magnetic-btn' href='#layanan'>
+              <i class='fas fa-play'></i> Layanan Kami
+            </a>
+          </div>
+        </div>
+
+        <div class='hero-scroll'>
+          <div class='scroll-indicator'>
+            <span>Scroll</span>
+            <div class='scroll-line'></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products Section -->
+      <section class='section section-white' id='produk'>
+        <div class='container'>
+          <div class='section-header'>
+            <span class='section-tag'>Produk Kami</span>
+            <h2 class='section-title'>PERCETAKAN ONLINE SAMARINDA</h2>
+            <p class='section-subtitle'>Percetakan dan Reklame yang kami geluti sejak tahun 2010</p>
+          </div>
+
+          <div class='products-grid'>
+            <!-- Product 1 -->
+            <article class='product-card reveal'>
+              <div class='product-image'>
+                <img alt='Spanduk Baliho' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEglcEgs-96EOfIMssVzaR2wapyKR34o2pVt4trwzR9N3U0HOkQaxhPKQ2hMgPg0gKDOIyZwqggSLzDth-Mks19h4yBwl1mX4KylgdR1zB5sfqIrC9OD2A85w_YsqG_3oC_8-TbqNvl0TSHoC-NYy3j7BdI_UnnQraNtxTnBfZSv4xW_cB1IwPUrX_6X9b8/s567/fgbdf.png'/>
+                <div class='product-overlay'>
+                  <span><i class='fas fa-cart-plus'></i> Order Sekarang</span>
+                </div>
+              </div>
+              <div class='product-info'>
+                <h3>SPANDUK BALIHO</h3>
+                <p class='product-meta'>Cetak spanduk dan baliho berkualitas tinggi dengan bahan premium</p>
+              </div>
+            </article>
+
+            <!-- Product 2 -->
+            <article class='product-card reveal'>
+              <div class='product-image'>
+                <img alt='Brosur' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEimOY-afkM7kzq25Gk_dw8CjFZ4Hfzx24wn7RRvQEfBZEAb3kjQEF1fHuCmYzQYHMdCJ136KbyGX1H3hfmGZxM_Wl5TcmO6lFx38RAB8rQ5GinD_TvGL21FN2MaEVtSOdkx1mjwQXt4XB2IiJeVM37L-tJcjA4QMdZCNIMW9mSSps-_psoScokiWNK_jDk/s567/sasda.png'/>
+                <div class='product-overlay'>
+                  <span><i class='fas fa-cart-plus'></i> Order Sekarang</span>
+                </div>
+              </div>
+              <div class='product-info'>
+                <h3>BROSUR FLYER</h3>
+                <p class='product-meta'>Promosi bisnis dengan brosur menarik dan desain profesional</p>
+              </div>
+            </article>
+
+            <!-- Product 3 -->
+            <article class='product-card reveal'>
+              <div class='product-image'>
+                <img alt='Standing Banner' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiE89O2wTkPx9UmW9gZAb1A3dp_FXMJD5g4mv6PgrB7KHdI3NiHPUFFxO2R8iMV6LXGWfYr8x4tIZhhew9BwB8ipn1pCn2YsJVCfVro2S5XktqMJhRyWOinXw7oMX6PXkDBRICIo4hJ9gFgUpfiFCVjXAX6Klgx1Qstlcc0Cbc3iO1cLidJrHu0408e-Kg/s1136/sdf.png'/>
+                <div class='product-overlay'>
+                  <span><i class='fas fa-cart-plus'></i> Order Sekarang</span>
+                </div>
+              </div>
+              <div class='product-info'>
+                <h3>STANDING BANNER</h3>
+                <p class='product-meta'>Banner berdiri untuk event, pameran, dan promosi indoor/outdoor</p>
+              </div>
+            </article>
+
+            <!-- Product 4 -->
+            <article class='product-card reveal'>
+              <div class='product-image'>
+                <img alt='Sticker Oneway' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjt5e2fvmzPAobdkkRocreipT38rPzGU9tjtBs-jlstEx2y1QZ7ivVKe3aXa2NQmUD2G_Eqmw8nC07UN3A0ASOP4aRmqrO_JNxdyVRvaeJ5OxYSQgw_e_zqHwDr4gUO-Ig2oZH5bmaUFVwrbTeiWscZ5pGmdb0Ph0K6aJHpMmpGurXwU7W0Ddy92uSWkf0/s378/onwa.png'/>
+                <div class='product-overlay'>
+                  <span><i class='fas fa-cart-plus'></i> Order Sekarang</span>
+                </div>
+              </div>
+              <div class='product-info'>
+                <h3>STICKER ONEWAY</h3>
+                <p class='product-meta'>Stiker kaca one way vision untuk branding kendaraan dan gedung</p>
+              </div>
+            </article>
+          </div>
+
+          <!-- Gallery Slider -->
+          <div class='gallery-wrapper reveal'>
+            <div class='gallery-header'>
+              <h3>Proses Pengerjaan</h3>
+              <p>Kami bekerja dengan profesional dan peralatan modern</p>
+            </div>
+            
+            <div class='gallery-slider'>
+              <div class='gallery-track'>
+                <div class='gallery-item'><img alt='Proses 1' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiJ2bWlakZF_0r4binxRFU7yeE6KGGm4Oh9LEVyBnFwAktb4iHcHu2fqnLqyoJk7a9aC9J7b6hndHP6ia4cMUq0RjM5goRbQyvTLPViFil3SNYS2H95h4avUAtoMlMoCN42T1UqukdADJQdZtFHeyS8vbdQhF6CoxbzlA-D4k9X4uvVyDVJ8WMfS5sqnVY/s497/VMM1.png'/></div>
+                <div class='gallery-item'><img alt='Proses 2' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi_CDA8zWteEGihSm7YNNL6Qr_SjR6BXNaba6wxtdMGLSoRuKOURyslYJBGJ30OmvRSRwYFyRsheVLmsSlCYzb5XRqldcf9Hgz1qnFckYCsT4lhEZQpRN7-R2uNGqsfGpRz5iAGuRvdlOSoeQGxV8zWOYWst9TnIqiapYHKP7z9ESDYBwIEBZJPrCmlcPg/s497/VMM2.png'/></div>
+                <div class='gallery-item'><img alt='Proses 3' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwEnbuH95PNlia_RAiJXNLf0Q9Zqt93uMEz1HddOz5DGBdj81rzI4pVYGchmZrAktfM3rZUu02o9JYVr8ijH5fZz97I3halQAyO_DksLufr8L-byHaIif1WVz0BwOxr5IVQWaKGG9jGMHhM22WKokmhtUdzJS30wz3LPQzLkBWS_4ZYSkg519JtIhJuVE/s497/sdsd.png'/></div>
+                <div class='gallery-item'><img alt='Proses 4' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi9fXVU1sXqvkMW_MGqVXHAW-xzduq9BTLnCnSe8EWwBR4t_HlzecnLCj0hW4jjU19AcB4J0Sz9aA72O22YvbD3vdaBXO3_XYG3FjvmXEuLIfilg9Kqv5GrPipdh6Ff7hCa_EBkkfdZprpFDXKVmLakri31JaM72CGjFozwkfRH3UE477ouDyeS7-ABg0Y/s497/jyfi.png'/></div>
+                <div class='gallery-item'><img alt='Proses 5' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjm36lGlaoqLuChPZFxp-bMhdGJ5Bjcs_6XhXItt31_pf164qn75r5VutPGmM2gbvo8_N9G4ae2DwfvjyXuOt9FlPTLenmV4Df1BK5-1Q_wM3oWAM22Nq2UiA3SEB6L3T5Y4LTBuz1q508_maHguO0-_Wu_ATIyvDaORNawHsfE-ncFOO96IgIc5-GkCA8/s497/jyhyhfgiyu.png'/></div>
+                <div class='gallery-item'><img alt='Proses 6' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiiyVe7BypWmPZ2GNbQWj-QpR3NUjHGhFMsIO1GKiEX4g-7C6BMRPzvn7oO1WtqEF7z6QmQJYaBNZVcgcZib6KKaX0jGlBWRbpkLXDA6BvQctQyRwb9L0aDn1OSfrkB1a_dh0pK8NR5s5hT4tHt-IAorZcxLD7Dxf0TXMixBmlXz5r6QCEKk52qERVeQno/s497/kugblj.png'/></div>
+                <div class='gallery-item'><img alt='Proses 7' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhfFU-dBDyrPIifV0lN_xCqpxYb1xx3cfyKnjKKg2XVhMEh3sTAwv92JdHXeUDEyHS7WmeVo4x30Sq_lvmILiXhyWGSOnO7zEZZlOcDpeoHObaLclAuGIMT3VcZmsUYvOykFWHr4VjMCLG3DLN2p6clIC73iFHfF15bDu6Blp8JXInUjcIotI0dA7CcITg/s497/kjhgvkjh.png'/></div>
+                <div class='gallery-item'><img alt='Proses 8' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhV_vcmyQlqJcKUFEpMvPywXqWkZywb9uSWuyjvhk4cwdQwKPFtrI1s_WvdsNtV6nDipNhoLLy9tgW057gaEQklHkz3fRANcFbg2vPAfTqmeL5eF9eKnJGQqF4h24g4mb4RQuHHLZSKa9pzaD99lE4JoyHWnLWNXDI7WmSMOyiWUSJjSHOss-cOZWLMrc8/s497/jkhkgvk.png'/></div>
+                <!-- Duplicate for infinite scroll -->
+                <div class='gallery-item'><img alt='Proses 1' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiJ2bWlakZF_0r4binxRFU7yeE6KGGm4Oh9LEVyBnFwAktb4iHcHu2fqnLqyoJk7a9aC9J7b6hndHP6ia4cMUq0RjM5goRbQyvTLPViFil3SNYS2H95h4avUAtoMlMoCN42T1UqukdADJQdZtFHeyS8vbdQhF6CoxbzlA-D4k9X4uvVyDVJ8WMfS5sqnVY/s497/VMM1.png'/></div>
+                <div class='gallery-item'><img alt='Proses 2' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi_CDA8zWteEGihSm7YNNL6Qr_SjR6BXNaba6wxtdMGLSoRuKOURyslYJBGJ30OmvRSRwYFyRsheVLmsSlCYzb5XRqldcf9Hgz1qnFckYCsT4lhEZQpRN7-R2uNGqsfGpRz5iAGuRvdlOSoeQGxV8zWOYWst9TnIqiapYHKP7z9ESDYBwIEBZJPrCmlcPg/s497/VMM2.png'/></div>
+              </div>
+            </div>
+
+            <div class='gallery-cta'>
+              <a class='btn btn-primary magnetic-btn' href='https://www.visualku.com/p/vmmp.html'>
+                <i class='fas fa-shopping-cart'></i> Order Disini
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services Section with Modals -->
+      <section class='section section-gray' id='layanan'>
+        <div class='container'>
+          <div class='section-header'>
+            <span class='section-tag'>Layanan Profesional</span>
+            <h2 class='section-title'>Solusi Desain Lengkap</h2>
+            <p class='section-subtitle'>Kami menyediakan berbagai layanan desain profesional untuk kebutuhan bisnis Anda</p>
+          </div>
+
+          <div class='services-grid'>
+            <!-- Logo Design -->
+            <div class='service-card reveal' onclick='openModal("logoModal")'>
+              <div class='service-icon'>
+                <i class='fas fa-pen-nib'></i>
+              </div>
+              <h3>Jasa Desain Logo</h3>
+              <p>Logo adalah identitas brand Anda. Kami menciptakan desain logo yang original, timeless, dan mencerminkan bisnis Anda.</p>
+              <span class='service-cta'>
+                Pelajari Lebih Lanjut <i class='fas fa-arrow-right'></i>
+              </span>
+            </div>
+
+            <!-- Agency -->
+            <div class='service-card reveal' onclick='openModal("agencyModal")'>
+              <div class='service-icon'>
+                <i class='fas fa-briefcase'></i>
+              </div>
+              <h3>Jasa Desain Grafis</h3>
+              <p>Butuh tim desain profesional untuk perusahaan Anda? Kami menyediakan layanan desain grafis bulanan dengan tim berpengalaman.</p>
+              <span class='service-cta'>
+                Pelajari Lebih Lanjut <i class='fas fa-arrow-right'></i>
+              </span>
+            </div>
+
+            <!-- Website -->
+            <div class='service-card reveal' onclick='openModal("websiteModal")'>
+              <div class='service-icon'>
+                <i class='fas fa-laptop-code'></i>
+              </div>
+              <h3>Jasa Buat Website</h3>
+              <p>Website adalah wajah digital bisnis Anda. Kami merancang website modern, responsif, dan optimal untuk konversi.</p>
+              <span class='service-cta'>
+                Pelajari Lebih Lanjut <i class='fas fa-arrow-right'></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Modals -->
+      <!-- Logo Modal -->
+      <div class='modal-overlay' id='logoModal' onclick='closeModal(event, "logoModal")'>
+        <div class='modal-content' onclick='event.stopPropagation()'>
+          <button class='modal-close' onclick='closeModal(event, "logoModal")'>
+            <i class='fas fa-times'></i>
+          </button>
+          <div class='modal-body'>
+            <div class='modal-header'>
+              <h2>Jasa Desain Logo Profesional</h2>
+              <p>Wujudkan identitas brand yang kuat dan berkesan</p>
+            </div>
+            
+            <img alt='Logo Design' class='modal-image' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjkZ3GP6iSOP-EBA7m6Jg_Piq8W59gKItJl5cUMEnX8v8OHsOesPf-BNjeNXzRNOsyZN7stGw-bVvrMP7-8LZKAF2-0c8DpL7BFjcQvo0FUx22ZtJTL_Ej-ziI4yMESveLK-U4HOlxUTJ3gd-vrhUQ0158DJjkrCSkf3L3TfNWnVID6FF6mITaSgRyiLxay/s4220/LOGO%20WEB%20VISUALKU.jpg'/>
+            
+            <div class='modal-features'>
+              <div class='modal-feature'>
+                <i class='fas fa-gem'></i>
+                <div>
+                  <h4>Desain Original</h4>
+                  <p>100% unik dan dibuat khusus untuk brand Anda</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-infinity'></i>
+                <div>
+                  <h4>Revisi Unlimited</h4>
+                  <p>Revisi sampai Anda benar-benar puas</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-clock'></i>
+                <div>
+                  <h4>Pengerjaan Cepat</h4>
+                  <p>Proses desain yang efisien dan tepat waktu</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-file-alt'></i>
+                <div>
+                  <h4>File Lengkap</h4>
+                  <p>Delivery semua format file yang Anda butuhkan</p>
+                </div>
+              </div>
+            </div>
+
+            <div class='modal-cta'>
+              <a class='btn btn-primary magnetic-btn' href='https://www.visualku.com/p/vmml.html'>
+                <i class='fas fa-pen-nib'></i> Buat Logo Sekarang
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agency Modal -->
+      <div class='modal-overlay' id='agencyModal' onclick='closeModal(event, "agencyModal")'>
+        <div class='modal-content' onclick='event.stopPropagation()'>
+          <button class='modal-close' onclick='closeModal(event, "agencyModal")'>
+            <i class='fas fa-times'></i>
+          </button>
+          <div class='modal-body'>
+            <div class='modal-header'>
+              <h2>Jasa Desain Grafis Agency</h2>
+              <p>Tim desain profesional untuk bisnis Anda</p>
+            </div>
+            
+            <img alt='Agency Visualku' class='modal-image' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhjWoYK73cdoXC9dMqr8aSs5rUTiT8uFOYHt98ugc3XGLR1aDaAE0wINkSQSkaE-r7p8vXBCYvZwmLO49ZvhJjsMlz-l9HojGSJhhucX7vrnmesIdSBVEXGDjocvEydVSyiykfyoFPS_UNLTINeo1P1RcS8JO9vG0ScTCb58GgAPCfheACyPsAj3E5vUhcS/s1024/ChatGPT%20Image%20Mar%2029,%202026,%2012_19_16%20AM.png'/>
+            
+            <div class='modal-features'>
+              <div class='modal-feature'>
+                <i class='fas fa-users'></i>
+                <div>
+                  <h4>Tim Berpengalaman</h4>
+                  <p>Designer profesional dengan portofolio terbukti</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-palette'></i>
+                <div>
+                  <h4>Berbagai Desain</h4>
+                  <p>Social media, branding, marketing materials</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-headset'></i>
+                <div>
+                  <h4>Komunikasi Intensif</h4>
+                  <p>Konsultasi dan revisi yang responsif</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-chart-line'></i>
+                <div>
+                  <h4>Strategi Visual</h4>
+                  <p>Desain yang mendukung marketing Anda</p>
+                </div>
+              </div>
+            </div>
+
+            <div class='modal-cta'>
+              <a class='btn btn-whatsapp magnetic-btn' href='https://www.visualku.com/p/hiredesign.html'>
+                <i class='fab fa-whatsapp'></i> Konsultasi Agency
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Website Modal -->
+      <div class='modal-overlay' id='websiteModal' onclick='closeModal(event, "websiteModal")'>
+        <div class='modal-content' onclick='event.stopPropagation()'>
+          <button class='modal-close' onclick='closeModal(event, "websiteModal")'>
+            <i class='fas fa-times'></i>
+          </button>
+          <div class='modal-body'>
+            <div class='modal-header'>
+              <h2>Jasa Pembuatan Website</h2>
+              <p>Wujudkan presence digital yang profesional</p>
+            </div>
+            
+            <img alt='Website Design' class='modal-image' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiV6NJL141wmysL7Rf_y9tcnmh69skg67FI4T-9gyEa7pNRURLYcNWoLo4cXL30FtLEJLrIqR3xbMnZbuUnn3_0-72p3N77jzppJDkyPylrBcKRtaRgActzJK21kEFtm3fdTls8JcdUkY9xxQxgPv6xQOHC0avshbDqB13yjLS6ydQDr3gJri7imOfGoeGm/s6400/website%20promo.jpg.jpeg'/>
+            
+            <div class='modal-features'>
+              <div class='modal-feature'>
+                <i class='fas fa-mobile-alt'></i>
+                <div>
+                  <h4>Responsive Design</h4>
+                  <p>Tampil sempurna di semua device</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-rocket'></i>
+                <div>
+                  <h4>Fast Loading</h4>
+                  <p>Optimasi kecepatan untuk SEO terbaik</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-shield-alt'></i>
+                <div>
+                  <h4>Secure &amp; Safe</h4>
+                  <p>Keamanan website terjamin</p>
+                </div>
+              </div>
+              <div class='modal-feature'>
+                <i class='fas fa-cogs'></i>
+                <div>
+                  <h4>Easy to Manage</h4>
+                  <p>CMS yang mudah digunakan</p>
+                </div>
+              </div>
+            </div>
+
+            <div class='modal-cta'>
+              <a class='btn btn-whatsapp magnetic-btn' href='https://www.visualku.com/p/website.html'>
+                <i class='fab fa-whatsapp'></i> Konsultasi Website
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonials Slider -->
+      <section class='section section-gray' id='testimoni'>
+        <div class='container'>
+          <div class='section-header'>
+            <span class='section-tag'>Testimoni</span>
+            <h2 class='section-title'>Apa Kata Mereka?</h2>
+            <p class='section-subtitle'>Realtime review <br> ★★★★★ Google kami</p>
+          </div>
+
+          <div class='testimonials-slider'>
+            <div class='testimonials-track'>
+              <div class='testimonial-item'><img alt='Testimoni 1' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1AA1MMRIDewSLOrckxtHkM45aBwr1WRX0DmcsHk5onHtKsY1vhDp1oeh3PZgsI0q25FJSIh_NMoXhLt-1hrs5cY_vIdfewwyXR4UtalT_2XbuGbdFIrhK-vaaO7M5AZIYyxpkiMxn_UpZg7_cWzx-j8eTU44GWE_h_P4xDDNApu65MuC7QqzVCzsQ_pyP/s3292/sfrgsgfg.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 2' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgsaBWLV3OdjN2pEBYiowqXH5PzaX8wr-WoX1R1kqPOmnD-QMSBVBX8_lpkAGGeuGwLyxxgB0ntOZGA4UeeXk3g-22IOzE0EuIev0JG0dEMY1SDwztktWjEDLHh_SWnkqhbO8h-VIEfUOi87HkQuBiuyt7tGztME4yLaKkaMtxJ28Ad6N9xLzHhDl3uN3nY/s3263/rttgdger.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 3' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZH4nfLQoRSi5IvvHOduZZnJWUSJJa5gXLYy4gqnBB30CcVAxgOkgl1GYtDQDKJaqMfPdWbtfXfpgs4Fg7htKt-DpgqpURpmRiFkadb7kgArPBO2ZDoVDsbjMui41uZCUpac7iXJQREMTKQEcoVwNSeWxZuMWvZ4BHG7JfmLTWQ0YEHE2Ho-gdIGici6sx/s3263/fdgdfgdfg.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 4' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjbOOLRcqhxboPEjtuDLg_MVcwQYZ-d0GHbusJRj3Ue08VrnUSrndxheBgyWn3UPuVKsIo7RaUHA9ik4IjeciGgguPKcXWs3m1ZmMyd1MngXkqUUSUgU_Uj-4nnLVug74bAWdsAQ0APuXOu5KH-xh5bViUR_rt9VznE1BiSXk8OFSNtoEhhIlV7UkF2KvvT/s3263/dgdhd.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 5' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_dn5GpZl0MANVw78hWrDV4taE8OhMaTAQ2MoD8gMop0jzSV4iS9IuEt5Pxdw0FrRMHEjq8nOQ2tiMO-DAawgUN9cbN_bpbcHnh7YivQZN4Cjk4GtnsffwlE1JiINuX34heEJEUt4D8jhsG43q55zU39hQ5fbFaWV5w3T-lUan0lUgZKH-F_7BeVzCddTG/s3263/dfsf.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 6' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_dn5GpZl0MANVw78hWrDV4taE8OhMaTAQ2MoD8gMop0jzSV4iS9IuEt5Pxdw0FrRMHEjq8nOQ2tiMO-DAawgUN9cbN_bpbcHnh7YivQZN4Cjk4GtnsffwlE1JiINuX34heEJEUt4D8jhsG43q55zU39hQ5fbFaWV5w3T-lUan0lUgZKH-F_7BeVzCddTG/s3263/dfsf.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 7' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi7FV8SfERjmRnSnj6Ogpt0m407c2dZNoay9-RR8XdezLzKBNIiVztAYtVGrIIvNQ7-0c5O4fBKJ8Hhd5c96SkOFdHVGx8XVgRWLsrYUwgy1z_wOrIYAddz8WJXjB60_43rKx1ZDl_5TUMh5NYOpc33r7on3lS6AEQAZazsOUQ2if1irml9KP5aCNlBVQDo/s3239/dfdgfg.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 8' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgR6V-v3qgJibmx7JxHfEjMvYL-gM4LOpV3zzAJ34OYnooCjCGZQHniNNzR6HEl_6GCfkvKLZ2nF_DyvV0HIZhfCWtJrFjEbaYypKXXHWpfdi2d4Ey_ToP2I04BcUgksfPGqAAiQuig0xPEpqfUymPpoajb95MPK5XApD80SI0aFTUvhJNziZi6wQGXW5TV/s3263/bbdw.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 9' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_BRSdEnd1r5m81ouoL83mppgbwU2sBbgxv4aBV0SLp6-ZYUMyFSdRo3xuuulh_yF9tSmDysADoCl9H7Zu4bRQXsauJZI_Uao9j3K-Amku10Fknd9mNKVhndFp3Mfc8HykIzVgHpgWrNZeV21vIwnkzISRZqV9PobZJ-6doALW8ebUwVOEPgW9XijVCKxN/s3263/b1.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 10' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQLHYYsx_GqIZfEhhyphenhyphenBnmpk1A7wuBFebW-HcQixfeni_u_rRbh_lYcY2lOgtsrc_ad9gq69Qhr1IILoPUJUSUUnOWSUdgV5t0U172g4x0j3z69PrxYCgPVh_DJhPCLCGQDv8f0LSZIP8sJ61ZNQoTNequnu58pEdProotTa9meoEu8mxxe7lNnfK-vzeU4/s3263/2b1.jpg'/></div>
+              <!-- Duplicate for infinite scroll -->
+              <div class='testimonial-item'><img alt='Testimoni 1' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1AA1MMRIDewSLOrckxtHkM45aBwr1WRX0DmcsHk5onHtKsY1vhDp1oeh3PZgsI0q25FJSIh_NMoXhLt-1hrs5cY_vIdfewwyXR4UtalT_2XbuGbdFIrhK-vaaO7M5AZIYyxpkiMxn_UpZg7_cWzx-j8eTU44GWE_h_P4xDDNApu65MuC7QqzVCzsQ_pyP/s3292/sfrgsgfg.jpg'/></div>
+              <div class='testimonial-item'><img alt='Testimoni 2' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgsaBWLV3OdjN2pEBYiowqXH5PzaX8wr-WoX1R1kqPOmnD-QMSBVBX8_lpkAGGeuGwLyxxgB0ntOZGA4UeeXk3g-22IOzE0EuIev0JG0dEMY1SDwztktWjEDLHh_SWnkqhbO8h-VIEfUOi87HkQuBiuyt7tGztME4yLaKkaMtxJ28Ad6N9xLzHhDl3uN3nY/s3263/rttgdger.jpg'/></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Clients Section -->
+      <section class='clients-section' id='clients'>
+        <div class='container'>
+          <h3 class='client-title'>Telah Dipercaya Oleh</h3>
+          
+          <div class='logo-slider'>
+            <div class='logo-track'>
+              <div class='logo-item'><img alt='Client 1' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh6NwWSqBIVC3L4eTsd9btMryIdSGsZZgYxm_ZUCv6K20hsXjhLB5yBvJHOjDog2H8IhdA85GyADgt7m5_xH_PRxQJSwK3iy0BuMSrASfQXvzTjntKiEvEUoWxsK-i-cOuGy7Q2aovZ_00FZmFSuIAD0T9isPpC31QBaBHRaJAIc3lfto7OlhFoGYJczcCW/s466/defwfw.jpg'/></div>
+              <div class='logo-item'><img alt='Client 2' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi44wgjfEEZFGbKtOtWEvXsemaFzaLJB21j7GPV7YEMrpoGGrUKqTt2qbVjsnQ2B1SCV4L9tyVXyLlnx-Kci3ohUpt6ok-lfFtyfn0Vnn-FhBnM03kimb3we8_URK68voqOhQrl-dxzH48wX58fwwJ7jicKhO4yFbCLPXQltxYaMbgRLdGtN-cwQgZradk3/s466/erfgetgegt.jpg'/></div>
+              <div class='logo-item'><img alt='Client 3' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgAmPvLcjjGnnyyWyD5YR05n1zdUEmHSLsNb10RYW2JE2Bbphqr8QpgYZ_ifThJ3gxX0np8J9QhQEPOQaXNsvpn2RCNiZPYIObTW7WwbO98sgDYOqye1mUpQ_0UB_l1NZWo0wcIksXVzqqFBdhIpmIa8JQ9r9l0P2avF9AO1sxGNfZdXqhP_0yY-wwnsJ7o/s466/fveev.jpg'/></div>
+              <div class='logo-item'><img alt='Client 4' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhl3K_VZICZTQuLZRk-CM454ZOZaTZeHJNXQpA2K1Wh_x83jyTSSksnavPitVW-S_kxPyuhmt65ObFJNSNJXVGMNGPyhBFGLke_kuh9j-OTRII1soX1N51ABkVfEu-n_RJpKH9d86tyXGTHyOMOK0s0_qsiw-n6FVoM7Ar0Zo1_L6nzaYuOAqjLibPFJSZ_/s466/logo%201.jpg'/></div>
+              <div class='logo-item'><img alt='Client 5' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEimNzmjWUyi0Eh1bYsWoEPcEzS_-L-ysY7lC9UbJFCnhM-CtH7UFlkabPQxN0y9yi7NYc24u-1ODt2QJogX2FoEpDPkCR7E413nSUGpB5XDd_IVn-Emc_xYqwA7fL9atuw6en4vYqEGGH39R6rbNmb9wDwRfI-VaTMFxG7rk0mk1E_zIbahJXeh7MmYmvVj/s466/rvevetrfveveverv.jpg'/></div>
+              <div class='logo-item'><img alt='Client 6' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_mWpgB8gZesroxjHvCKws6jyXvYWbj_44ONhyCdI0r00Fx2JMIDcQeiXN9kGv11n1K-1NmcswHuDwX42kOA5R4SOW7Y8ILpLKO2BGPma_FElLmFumk8v1G_nRLtq5v6U7A8yiRResQexqyGML8Ct8cZdmzQW3Za6nm74yk59NXZTaMLc2LnF2MWWQ_WK9/s466/wefbebebeb.jpg'/></div>
+              <div class='logo-item'><img alt='Client 7' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgk_4udmcBXPl11etMHlcItMqrgt3hN7zshx-pSD_ALMD8bCDyGJCMMjj4DyRAxV7bPb8h1qDOhdMpuSaOQVNoQYIeOeIBTTEdgqfoINEHW33i2VkbwH0_WCGzR82l9OdfxfRz3NAblnFz0_2F1vbQFX6dcVt54nwgjUu1WPvrFOZ11QvPYFM7tVGgFikq7/s466/wrgwrg.jpg'/></div>
+              <div class='logo-item'><img alt='Client 8' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZyUMifuyEKFzieY2evT6fgymOb30ylOhyHkeFAwiGjwt9aOvPhdh-ZrDjOUikPBWP-JIXoyM7EE0vFyF3czFxAPs3eKyzyFw4rogayzvOOa5n7cOxkcO1TbxFMUb1lcGXrUtNRR2Uh7D8hTRDItK7ouSQ9o8Z74auavAq6Q2-nrn2wL7i1KWYzYyf22AQ/s466/wrgwrgw.jpg'/></div>
+              <!-- Duplicate -->
+              <div class='logo-item'><img alt='Client 1' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh6NwWSqBIVC3L4eTsd9btMryIdSGsZZgYxm_ZUCv6K20hsXjhLB5yBvJHOjDog2H8IhdA85GyADgt7m5_xH_PRxQJSwK3iy0BuMSrASfQXvzTjntKiEvEUoWxsK-i-cOuGy7Q2aovZ_00FZmFSuIAD0T9isPpC31QBaBHRaJAIc3lfto7OlhFoGYJczcCW/s466/defwfw.jpg'/></div>
+              <div class='logo-item'><img alt='Client 2' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi44wgjfEEZFGbKtOtWEvXsemaFzaLJB21j7GPV7YEMrpoGGrUKqTt2qbVjsnQ2B1SCV4L9tyVXyLlnx-Kci3ohUpt6ok-lfFtyfn0Vnn-FhBnM03kimb3we8_URK68voqOhQrl-dxzH48wX58fwwJ7jicKhO4yFbCLPXQltxYaMbgRLdGtN-cwQgZradk3/s466/erfgetgegt.jpg'/></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class='cta-section'>
+        <div class='cta-content'>
+          <h2 class='cta-title'>Cetak atau Jasa Desain Grafis?</h2>
+          <p class='cta-text'>Promosikan usahamu dengan kualitas terbaik, dan handle semua pekerjaanmu dengan tim designer yang tepat.</p>
+          <a class='btn btn-whatsapp magnetic-btn' href='https://s.id/visualkuy' style='font-size: 1.1rem; padding: 18px 44px;'>
+            <i class='fab fa-whatsapp'></i> Hubungi Kami Sekarang
+          </a>
+        </div>
+      </section>
+
+    </b:if>
+
+    <!-- Internal Pages -->
+    <b:if cond='!data:view.isHomepage'>
+      <div class='container main-body-wrapper' style='padding: 140px 20px 80px; max-width: 900px;'>
+        <b:section class='main' id='main-body' showaddelement='yes'>
+          <b:widget id='Blog1' locked='true' title='Postingan Blog' type='Blog' version='1'>
+            <b:widget-settings>
+              <b:widget-setting name='showDateHeader'>true</b:widget-setting>
+              <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
+              <b:widget-setting name='showShareButtons'>false</b:widget-setting>
+              <b:widget-setting name='authorLabel'>By</b:widget-setting>
+              <b:widget-setting name='showCommentLink'>true</b:widget-setting>
+              <b:widget-setting name='style.urlcolor'>#ffffff</b:widget-setting>
+              <b:widget-setting name='showAuthor'>true</b:widget-setting>
+              <b:widget-setting name='style.linkcolor'>#ffffff</b:widget-setting>
+              <b:widget-setting name='style.unittype'>TextAndImage</b:widget-setting>
+              <b:widget-setting name='style.bgcolor'>#ffffff</b:widget-setting>
+              <b:widget-setting name='reactionsLabel'/>
+              <b:widget-setting name='showAuthorProfile'>false</b:widget-setting>
+              <b:widget-setting name='style.layout'>1x1</b:widget-setting>
+              <b:widget-setting name='showLabels'>true</b:widget-setting>
+              <b:widget-setting name='showLocation'>true</b:widget-setting>
+              <b:widget-setting name='showTimestamp'>true</b:widget-setting>
+              <b:widget-setting name='postsPerAd'>1</b:widget-setting>
+              <b:widget-setting name='showBacklinks'>false</b:widget-setting>
+              <b:widget-setting name='style.bordercolor'>#ffffff</b:widget-setting>
+              <b:widget-setting name='showInlineAds'>false</b:widget-setting>
+              <b:widget-setting name='showReactions'>false</b:widget-setting>
+            </b:widget-settings>
+            <b:includable id='main' var='top'>
+              <b:if cond='!data:mobile'>
+                <div class='blog-posts hfeed'>
+                  <b:include data='top' name='status-message'/>
+                  <b:loop values='data:posts' var='post'>
+                    <div class='post-outer'>
+                      <b:include data='post' name='post'/>
+                    </div>
+                  </b:loop>
+                </div>
+                <b:include name='nextprev'/>
+              <b:else/>
+                <b:include name='mobile-main'/>
+              </b:if>
+            </b:includable>
+            <!-- Simplified post includables for internal pages -->
+            <b:includable id='post' var='post'>
+              <article class='post hentry' itemscope='itemscope' itemtype='http://schema.org/BlogPosting'>
+                <b:if cond='data:post.title'>
+                  <h1 class='post-title' itemprop='name' style='font-size: 2.5rem; color: var(--primary); margin-bottom: 24px; font-weight: 800; line-height: 1.3;'>
+                    <data:post.title/>
+                  </h1>
+                </b:if>
+                <div class='post-body' itemprop='articleBody' style='font-size: 1.1rem; line-height: 1.9; color: var(--gray-600);'>
+                  <data:post.body/>
+                </div>
+              </article>
+            </b:includable>
+            <b:includable id='nextprev'>
+              <div class='blog-pager' style='margin-top: 48px; text-align: center;'>
+                <b:if cond='data:newerPageUrl'>
+                  <a class='blog-pager-newer-link' expr:href='data:newerPageUrl' style='margin-right: 16px; color: var(--secondary); text-decoration: none; font-weight: 600;'>&#8592; Newer</a>
+                </b:if>
+                <b:if cond='data:olderPageUrl'>
+                  <a class='blog-pager-older-link' expr:href='data:olderPageUrl' style='color: var(--secondary); text-decoration: none; font-weight: 600;'>Older &#8594;</a>
+                </b:if>
+              </div>
+            </b:includable>
+            <b:includable id='status-message'>
+              <b:if cond='data:navMessage'>
+                <div class='status-msg-wrap'>
+                  <div class='status-msg-body'>
+                    <data:navMessage/>
+                  </div>
+                </div>
+              </b:if>
+            </b:includable>
+            <!-- Mobile fallback -->
+            <b:includable id='mobile-main' var='top'>
+              <div class='blog-posts hfeed'>
+                <b:include data='top' name='status-message'/>
+                <b:loop values='data:posts' var='post'>
+                  <b:include data='post' name='post'/>
+                </b:loop>
+              </div>
+            </b:includable>
+          </b:widget>
+        </b:section>
+      </div>
+    </b:if>
+  </main>
+
+  <!-- Footer -->
+  <footer class='footer' id='kontak'>
+    <div class='container'>
+      <div class='footer-grid'>
+        <div class='footer-col footer-brand'>
+          <a class='logo-footer' href='/'>
+            <img alt='Visualku Logo' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqigfesHf6zi2UCKcBKpa2F_4EsbLnCHU_Q_S3jCIjCG5eauZ_yYLoYyFYbzm961j1CNYnz2AN5_wXfxcflgZUzyyfzoyH_GYUHPWNfc7ef2XuMANCgHNaS8m9o_VYo12KbsshRfG7aRCINwlBkT4X5XM8Wn8Qt-q4TeRZ567SSalAKnPNxmrbMPaPUic/s2454/gold.png'/>
+          </a>
+          <p>Solusi cetak dan desain kreatif untuk memajukan bisnis Anda. Kualitas dan kepuasan pelanggan adalah prioritas kami sejak 2010.</p>
+          <div class='social-links'>
+            <a class='social-link' href='https://www.instagram.com/visualkumetamedia/' target='_blank' title='Instagram'>
+              <i class='fab fa-instagram'></i>
+            </a>
+            <a class='social-link' href='#' target='_blank' title='Facebook'>
+              <i class='fab fa-facebook-f'></i>
+            </a>
+            <a class='social-link' href='#' target='_blank' title='TikTok'>
+              <i class='fab fa-tiktok'></i>
+            </a>
+          </div>
+        </div>
+
+        <div class='footer-col'>
+          <h4>Hubungi Kami</h4>
+          <ul>
+            <li>
+              <a href='tel:+6285183089108'>
+                <i class='fab fa-whatsapp'></i> 0851-8308-9108
+              </a>
+            </li>
+            <li>
+              <a href='mailto:order@visualku.com'>
+                <i class='fas fa-envelope'></i> order@visualku.com
+              </a>
+            </li>
+            <li>
+              <a href='https://www.visualku.com' target='_blank'>
+                <i class='fas fa-globe'></i> www.visualku.com
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class='footer-col'>
+          <h4>Alamat</h4>
+          <p style='line-height: 1.9; margin-bottom: 0;'>
+            <i class='fas fa-map-marker-alt' style='margin-right: 12px; color: var(--secondary);'></i>
+            Jl. Adam Malik 2, Samarinda<br/>
+            Kec. Sungai Kunjang<br/>
+            Kalimantan Timur, 75126
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class='footer-bottom'>
+      <div class='container'>
+        <p class='copyright'>
+          <script>document.write(new Date().getFullYear())</script> PT. VISUALKU META MEDIA. All Rights Reserved.
+        </p>
+        <div class='payment-methods'>
+          <img alt='Metode Pembayaran' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhBegmUz2WJSJinqAcd2ufk78QKXesvq15_SR3QXf8lfUlWtOevkZca4K7MuqJsb73_3QiZTQ42M7MaKk12ofPP4MqhkcJvK8Qq4TGNoa0nirPTfz7fqV2leILi6z-UR3P8fA6xsB1MAjx_IYWYKD3KkKMCQKrnpbOy1pl7If25T-usvnqKUXNsytXvNqFH/s1176/payy.png'/>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type='text/javascript'>
+    //<![CDATA[
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // ===== LENIS SMOOTH SCROLL =====
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true
+      });
+      
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // ===== GSAP SETUP =====
+      gsap.registerPlugin(ScrollTrigger);
+
+      // ===== CUSTOM CURSOR =====
+      const cursorDot = document.querySelector('.cursor-dot');
+      const cursorOutline = document.querySelector('.cursor-outline');
+      
+      if (cursorDot && cursorOutline && !window.matchMedia('(pointer: coarse)').matches) {
+        let mouseX = 0, mouseY = 0;
+        let outlineX = 0, outlineY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          cursorDot.style.left = mouseX + 'px';
+          cursorDot.style.top = mouseY + 'px';
+        });
+        
+        function animateCursor() {
+          outlineX += (mouseX - outlineX) * 0.15;
+          outlineY += (mouseY - outlineY) * 0.15;
+          cursorOutline.style.left = outlineX + 'px';
+          cursorOutline.style.top = outlineY + 'px';
+          requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // Hover effect
+        const interactive = document.querySelectorAll('a, button, .product-card, .service-card, .magnetic-btn');
+        interactive.forEach(el => {
+          el.addEventListener('mouseenter', () => cursorOutline.classList.add('hover'));
+          el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hover'));
+        });
+      }
+
+      // ===== SCROLL PROGRESS =====
+      const scrollProgress = document.querySelector('.scroll-progress');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        scrollProgress.style.width = scrollPercent + '%';
+      });
+
+      // ===== HEADER SCROLL EFFECT =====
+      const header = document.querySelector('#header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+
+      // ===== SCROLL REVEAL ANIMATIONS =====
+      const revealElements = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+      
+      revealElements.forEach(el => revealObserver.observe(el));
+
+      // ===== GSAP SECTION ANIMATIONS =====
+      gsap.utils.toArray('.section').forEach(section => {
+        gsap.fromTo(section.querySelectorAll('.reveal'), 
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+      });
+
+      // ===== MOBILE MENU =====
+      const burger = document.querySelector('#burger');
+      const nav = document.querySelector('#navLinks');
+      const navLinks = document.querySelectorAll('.nav-link');
+
+      if (burger) {
+        burger.addEventListener('click', () => {
+          nav.classList.toggle('nav-active');
+          burger.classList.toggle('toggle');
+          document.body.style.overflow = nav.classList.contains('nav-active') ? 'hidden' : '';
+        });
+
+        navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            nav.classList.remove('nav-active');
+            burger.classList.remove('toggle');
+            document.body.style.overflow = '';
+          });
+        });
+      }
+
+      // ===== MODAL FUNCTIONS =====
+      window.openModal = function(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+
+      window.closeModal = function(event, modalId) {
+        if (event.target.classList.contains('modal-overlay') || event.target.closest('.modal-close')) {
+          const modal = document.getElementById(modalId);
+          if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        }
+      };
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+            modal.classList.remove('active');
+          });
+          document.body.style.overflow = '';
+        }
+      });
+
+      // ===== MAGNETIC BUTTONS =====
+      const magneticBtns = document.querySelectorAll('.magnetic-btn');
+      magneticBtns.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = 'translate(0, 0)';
+        });
+      });
+
+      // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href !== '#' && href !== 'https://s.id/visualkuy') {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              const headerOffset = 100;
+              const elementPosition = target.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+              
+              lenis.scrollTo(offsetPosition, {
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+              });
+            }
+          }
+        });
+      });
+
+      // ===== HERO ANIMATIONS ON LOAD =====
+      gsap.from('.hero-badge', { duration: 1, y: -30, opacity: 0, ease: 'power3.out', delay: 0.3 });
+      gsap.from('.hero-title', { duration: 1.2, y: 50, opacity: 0, ease: 'power4.out', delay: 0.5 });
+      gsap.from('.hero-subtitle', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.7 });
+      gsap.from('.hero-buttons .btn', { 
+        duration: 0.8, 
+        y: 30, 
+        opacity: 0, 
+        stagger: 0.15, 
+        ease: 'power3.out', 
+        delay: 0.9 
+      });
+    });
+    //]]>
+  </script>
+</body>
+</html>
