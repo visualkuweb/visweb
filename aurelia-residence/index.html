@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Aurelia Residence - Hunian eksklusif dengan konsep modern luxury di lokasi strategis">
+    <title>The Aurelia Residence | Premium Living Experience</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="logo-text">Aurelia</span>
+                <span class="logo-sub">Residence</span>
+            </a>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#properties" class="nav-link">Properties</a></li>
+                <li><a href="#location" class="nav-link">Location</a></li>
+                <li><a href="#facilities" class="nav-link">Facilities</a></li>
+                <li><a href="#contact" class="nav-link cta-nav">Contact Us</a></li>
+            </ul>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <div class="hero-bg-image" data-speed="0.5"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-gradient"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-badge reveal-text">
+                <span class="badge-dot"></span>
+                Now Selling - Limited Units
+            </div>
+            
+            <h1 class="hero-title reveal-text">
+                <span class="title-line">Where Luxury</span>
+                <span class="title-line">Meets Comfort</span>
+            </h1>
+            
+            <p class="hero-subtitle reveal-text">
+                Experience unparalleled living in The Aurelia Residence. 
+                A masterpiece of modern architecture designed for those who demand excellence.
+            </p>
+            
+            <div class="hero-cta reveal-text">
+                <a href="#properties" class="btn btn-primary magnetic-btn">
+                    <span>Explore Properties</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="https://wa.me/6281234567890" class="btn btn-secondary magnetic-btn" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="hero-scroll">
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <div class="scroll-line"></div>
+            </div>
+        </div>
+        
+        <div class="hero-stats">
+            <div class="stat-item reveal-stat">
+                <span class="stat-number" data-target="150">0</span>
+                <span class="stat-label">Units Available</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item reveal-stat">
+                <span class="stat-number" data-target="850">0</span>
+                <span class="stat-metric">m²</span>
+                <span class="stat-label">Land Area</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item reveal-stat">
+                <span class="stat-number" data-target="5">0</span>
+                <span class="stat-metric">★</span>
+                <span class="stat-label">Star Facility</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about section" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <div class="section-header">
+                        <span class="section-tag">About Us</span>
+                        <h2 class="section-title">Crafting Dreams Into Reality</h2>
+                    </div>
+                    
+                    <p class="about-text reveal-up">
+                        The Aurelia Residence represents the pinnacle of modern living. 
+                        Designed with meticulous attention to detail, each residence offers 
+                        a perfect blend of contemporary architecture and timeless elegance.
+                    </p>
+                    
+                    <div class="features-list">
+                        <div class="feature-item reveal-up">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Premium Architecture</h3>
+                                <p>World-class design by renowned architects</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item reveal-up">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Strategic Location</h3>
+                                <p>Prime location with easy access to city center</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item reveal-up">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h3>24/7 Security</h3>
+                                <p>Advanced security system for your peace of mind</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-visual">
+                    <div class="about-image-wrapper">
+                        <div class="about-image" data-speed="0.2">
+                            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80" alt="Luxury House Exterior">
+                        </div>
+                        <div class="image-float">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80" alt="Interior Design">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Properties Section -->
+    <section class="properties section" id="properties">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-tag">Our Collection</span>
+                <h2 class="section-title">Exclusive Properties</h2>
+                <p class="section-subtitle">Choose from our carefully curated selection of premium residences</p>
+            </div>
+            
+            <div class="properties-grid">
+                <!-- Property Card 1 -->
+                <article class="property-card reveal-up">
+                    <div class="property-image">
+                        <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80" alt="The Aurelia Type A">
+                        <div class="property-badge">Best Seller</div>
+                        <div class="property-overlay"></div>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3>The Aurelia Type A</h3>
+                            <span class="property-price">IDR 8.5 M</span>
+                        </div>
+                        <div class="property-specs">
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                <span>3 Bedrooms</span>
+                            </div>
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                <span>2 Bathrooms</span>
+                            </div>
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                                </svg>
+                                <span>120 m²</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline property-btn magnetic-btn">
+                            View Details
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Property Card 2 -->
+                <article class="property-card reveal-up">
+                    <div class="property-image">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="The Aurelia Type B">
+                        <div class="property-badge new">New Release</div>
+                        <div class="property-overlay"></div>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3>The Aurelia Type B</h3>
+                            <span class="property-price">IDR 12.5 M</span>
+                        </div>
+                        <div class="property-specs">
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                <span>4 Bedrooms</span>
+                            </div>
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                <span>3 Bathrooms</span>
+                            </div>
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                                </svg>
+                                <span>180 m²</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline property-btn magnetic-btn">
+                            View Details
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Property Card 3 -->
+                <article class="property-card reveal-up">
+                    <div class="property-image">
+                        <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80" alt="The Aurelia Type C">
+                        <div class="property-overlay"></div>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3>The Aurelia Type C</h3>
+                            <span class="property-price">IDR 15.8 M</span>
+                        </div>
+                        <div class="property-specs">
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                <span>5 Bedrooms</span>
+                            </div>
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                <span>4 Bathrooms</span>
+                            </div>
+                            <div class="spec">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                                </svg>
+                                <span>250 m²</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline property-btn magnetic-btn">
+                            View Details
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="location section" id="location">
+        <div class="container">
+            <div class="location-grid">
+                <div class="location-content">
+                    <div class="section-header">
+                        <span class="section-tag">Location</span>
+                        <h2 class="section-title">Strategic Location</h2>
+                    </div>
+                    
+                    <p class="location-text reveal-up">
+                        Perfectly positioned in the heart of the city, The Aurelia Residence 
+                        offers unparalleled connectivity to business districts, shopping centers, 
+                        and educational institutions.
+                    </p>
+                    
+                    <div class="location-features reveal-up">
+                        <div class="location-feature">
+                            <div class="feature-number">5</div>
+                            <div class="feature-info">
+                                <span class="feature-title">Minutes to</span>
+                                <span class="feature-desc">City Center</span>
+                            </div>
+                        </div>
+                        <div class="location-feature">
+                            <div class="feature-number">10</div>
+                            <div class="feature-info">
+                                <span class="feature-title">Minutes to</span>
+                                <span class="feature-desc">International Airport</span>
+                            </div>
+                        </div>
+                        <div class="location-feature">
+                            <div class="feature-number">2</div>
+                            <div class="feature-info">
+                                <span class="feature-title">Minutes to</span>
+                                <span class="feature-desc">Shopping Mall</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://maps.google.com" target="_blank" class="btn btn-primary magnetic-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                            <line x1="8" y1="2" x2="8" y2="18"></line>
+                            <line x1="16" y1="6" x2="16" y2="22"></line>
+                        </svg>
+                        <span>View on Google Maps</span>
+                    </a>
+                </div>
+                
+                <div class="location-map reveal-up">
+                    <div class="map-wrapper">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.26149919597!2d106.6894!3d-6.2088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e945e34b9d%3A0x5371bf0fdad786a2!2sJakarta!5e0!3m2!1sen!2sid!4v1234567890"
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                        <div class="map-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section class="facilities section" id="facilities">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-tag">Amenities</span>
+                <h2 class="section-title">World-Class Facilities</h2>
+                <p class="section-subtitle">Experience luxury living with our premium facilities</p>
+            </div>
+            
+            <div class="facilities-grid">
+                <div class="facility-card reveal-up">
+                    <div class="facility-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                            <line x1="6" y1="1" x2="6" y2="4"></line>
+                            <line x1="10" y1="1" x2="10" y2="4"></line>
+                            <line x1="14" y1="1" x2="14" y2="4"></line>
+                        </svg>
+                    </div>
+                    <h3>Clubhouse</h3>
+                    <p>Luxury clubhouse with premium amenities</p>
+                </div>
+                
+                <div class="facility-card reveal-up">
+                    <div class="facility-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 12h20"></path>
+                            <path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"></path>
+                            <path d="M12 12V4"></path>
+                            <path d="M8 8l4-4 4 4"></path>
+                        </svg>
+                    </div>
+                    <h3>Infinity Pool</h3>
+                    <p>Stunning infinity pool with city view</p>
+                </div>
+                
+                <div class="facility-card reveal-up">
+                    <div class="facility-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                    </div>
+                    <h3>24/7 Security</h3>
+                    <p>Round-the-clock security service</p>
+                </div>
+                
+                <div class="facility-card reveal-up">
+                    <div class="facility-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                            <line x1="4" y1="22" x2="4" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h3>Private Park</h3>
+                    <p>Beautifully landscaped private park</p>
+                </div>
+                
+                <div class="facility-card reveal-up">
+                    <div class="facility-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <h3>Fitness Center</h3>
+                    <p>State-of-the-art fitness equipment</p>
+                </div>
+                
+                <div class="facility-card reveal-up">
+                    <div class="facility-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <h3>Smart Home</h3>
+                    <p>IoT-enabled smart home system</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials section">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-tag">Testimonials</span>
+                <h2 class="section-title">What Our Residents Say</h2>
+            </div>
+            
+            <div class="testimonials-slider">
+                <div class="testimonial-track" id="testimonialTrack">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">"</div>
+                            <p class="testimonial-text">
+                                Living at The Aurelia Residence has been an absolute dream. 
+                                The attention to detail, the facilities, and the community 
+                                are all world-class. I couldn't be happier with my decision.
+                            </p>
+                            <div class="testimonial-author">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="John Doe">
+                                <div class="author-info">
+                                    <h4>Michael Anderson</h4>
+                                    <span>Type A Owner</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">"</div>
+                            <p class="testimonial-text">
+                                The location is perfect for my family. Close to schools, 
+                                shopping, and work. The security gives us peace of mind, 
+                                and the facilities are better than any hotel.
+                            </p>
+                            <div class="testimonial-author">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Sarah Smith">
+                                <div class="author-info">
+                                    <h4>Sarah Johnson</h4>
+                                    <span>Type B Owner</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">"</div>
+                            <p class="testimonial-text">
+                                As an investor, I've seen many properties, but The Aurelia 
+                                Residence stands out. The quality of construction and the 
+                                potential for appreciation is exceptional.
+                            </p>
+                            <div class="testimonial-author">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80" alt="David Lee">
+                                <div class="author-info">
+                                    <h4>David Chen</h4>
+                                    <span>Type C Owner</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-controls">
+                    <button class="testimonial-btn prev" id="prevBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <div class="testimonial-dots" id="testimonialDots"></div>
+                    <button class="testimonial-btn next" id="nextBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta section" id="contact">
+        <div class="cta-bg">
+            <div class="cta-bg-image"></div>
+            <div class="cta-overlay"></div>
+        </div>
+        
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title reveal-up">Ready to Find Your Dream Home?</h2>
+                <p class="cta-text reveal-up">
+                    Schedule a private tour today and experience luxury living at The Aurelia Residence. 
+                    Our property consultants are ready to assist you.
+                </p>
+                
+                <div class="cta-buttons reveal-up">
+                    <a href="https://wa.me/6281234567890" class="btn btn-whatsapp magnetic-btn" target="_blank">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        <span>Chat on WhatsApp</span>
+                    </a>
+                    <a href="tel:+6281234567890" class="btn btn-outline-light magnetic-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                        <span>Call Now</span>
+                    </a>
+                </div>
+                
+                <div class="cta-info reveal-up">
+                    <div class="info-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>Jl. Aurelia Boulevard No. 88, Jakarta Selatan</span>
+                    </div>
+                    <div class="info-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <span>info@aureliaresidence.com</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="footer-logo">
+                        <span class="logo-text">Aurelia</span>
+                        <span class="logo-sub">Residence</span>
+                    </a>
+                    <p class="footer-desc">
+                        Creating exceptional living experiences through innovative design 
+                        and uncompromising quality.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#properties">Properties</a></li>
+                        <li><a href="#location">Location</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Properties</h4>
+                    <ul>
+                        <li><a href="#">Type A - 120m²</a></li>
+                        <li><a href="#">Type B - 180m²</a></li>
+                        <li><a href="#">Type C - 250m²</a></li>
+                        <li><a href="#">Penthouse</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-newsletter">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for latest updates and exclusive offers</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email" required>
+                        <button type="submit" class="btn-submit">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 The Aurelia Residence. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
