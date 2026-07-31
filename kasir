@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualku Printing Kasir</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy: #0f172a;
+            --navy-light: #1e293b;
+            --blue: #2563eb;
+            --blue-glow: rgba(37, 99, 235, 0.15);
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            --radius: 1.5rem;
+            --radius-sm: 0.75rem;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--navy);
+        }
+
+        .container { max-width: 1100px; margin: auto; }
+
+        .header { text-align: center; color: white; margin-bottom: 32px; }
+        .header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+        .header p { opacity: 0.8; margin-top: 6px; font-size: 15px; font-weight: 500; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        .grid-settings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--navy-light);
+            font-size: 14px;
+        }
+
+        .input-wrapper { position: relative; margin-bottom: 4px; }
+
+        .input-wrapper input,
+        .input-wrapper select {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #cbd5e1;
+            background: transparent;
+            padding: 12px 4px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--navy);
+            outline: none;
+            transition: border-color 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        /* Style untuk input yang di-mask (hidden) */
+        .input-wrapper input.masked {
+            color: transparent;
+            text-shadow: 0 0 8px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+
+        .input-wrapper input.masked::-moz-selection {
+            color: transparent;
+            background: var(--blue);
+        }
+
+        .input-wrapper input.masked::selection {
+            color: transparent;
+            background: var(--blue);
+        }
+
+        .input-wrapper select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230f172a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0 center;
+            padding-right: 24px;
+        }
+
+        .input-wrapper .line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--blue);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-wrapper input:focus,
+        .input-wrapper select:focus { border-bottom-color: transparent; }
+        .input-wrapper input:focus ~ .line,
+        .input-wrapper select:focus ~ .line { width: 100%; }
+
+        /* Toggle button untuk show/hide harga */
+        .toggle-harga {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--blue);
+            font-size: 18px;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .toggle-harga:hover {
+            color: var(--navy);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .table-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 8px;
+            min-width: 700px;
+        }
+
+        th {
+            background: var(--navy);
+            color: white;
+            padding: 14px 10px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th:first-child { border-radius: 12px 0 0 0; }
+        th:last-child { border-radius: 0 12px 0 0; }
+
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: center;
+            font-size: 14px;
+            color: var(--navy-light);
+            vertical-align: middle;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8fafc; }
+
+        td input, td select {
+            width: 100%;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 4px;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s;
+            background: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 500;
+        }
+
+        td select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%230f172a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            padding-right: 20px;
+            cursor: pointer;
+        }
+
+        td input:focus, td select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px var(--blue-glow);
+        }
+
+        .badge-ukuran {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-hapus {
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-hapus:hover {
+            background: #ef4444;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        #tambah {
+            margin-top: 16px;
+            background: white;
+            color: var(--blue);
+            border: 2px dashed var(--blue);
+            padding: 12px;
+            width: 100%;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        #tambah:hover {
+            background: var(--blue);
+            color: white;
+            border-style: solid;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .box:hover { transform: translateY(-4px); }
+
+        .box h3 {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .box h2 { color: var(--blue); font-size: 24px; font-weight: 800; }
+        .box.highlight h2 { color: #16a34a; }
+
+        .bottomButton { text-align: center; margin-top: 32px; }
+
+        #btnMargin {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            padding: 16px 48px;
+            border: none;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        #btnMargin:hover {
+            transform: scale(1.03) translateY(-2px);
+            box-shadow: 0 12px 28px rgba(22, 163, 74, 0.4);
+        }
+
+        .popup {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .popupContent {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: var(--radius);
+            padding: 28px;
+            animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes pop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .popupContent h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--navy);
+            font-size: 20px;
+        }
+
+        .hasil {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+
+        .hasil:last-of-type { border-bottom: none; }
+        .hasil p { color: #64748b; font-weight: 500; }
+        .hasil b { color: var(--navy); font-weight: 700; }
+        .hasil b.untung { color: #16a34a; font-size: 16px; }
+
+        .popup-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-popup {
+            padding: 14px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        #tutupPopup { background: var(--navy); color: white; }
+        #tutupPopup:hover { background: var(--navy-light); }
+        #btnDownload { background: var(--blue); color: white; }
+        #btnDownload:hover { background: #1d4ed8; }
+
+        .detail-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px dashed #e2e8f0;
+        }
+
+        .detail-section h4 {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .detail-row span:last-child { font-weight: 600; color: var(--navy); }
+
+        /* Info tooltip untuk harga yang di-hide */
+        .harga-hidden-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .header h1 { font-size: 24px; }
+            .grid-settings { grid-template-columns: 1fr; gap: 20px; }
+            .summary { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Visualku Printing Kasir</h1>
+        <p>Campur berbagai jenis produk dalam satu orderan</p>
+    </div>
+
+    <!-- Card Pengaturan Global -->
+    <div class="card">
+        <div class="grid-settings">
+            <div class="input-wrapper">
+                <label>Harga Normal / m² (Default)</label>
+                <input type="number" id="hargaNormal" value="55000" placeholder="55000" class="masked">
+                <button class="toggle-harga" onclick="toggleHarga('hargaNormal')" title="Tampilkan/Sembunyikan Harga">👁️</button>
+                <div class="line"></div>
+                <div class="harga-hidden-info">🔒 Harga disembunyikan</div>
+            </div>
+
+            <div class="input-wrapper">
+                <label>Harga Express / m² (Default)</label>
+                <input type="number" id="hargaExpress" value="75000" placeholder="75000" class="masked">
+                <button class="toggle-harga" onclick="toggleHarga('hargaExpress')" title="Tampilkan/Sembunyikan Harga">👁️</button>
+                <div class="line"></div>
+                <div class="harga-hidden-info">🔒 Harga disembunyikan</div>
+            </div>
+
+            <div class="input-wrapper">
+                <label>Tambahan Biaya Desain (Rp)</label>
+                <input type="number" id="biayaDesain" value="0" placeholder="0">
+                <div class="line"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel Unified -->
+    <div class="card">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jenis</th>
+                        <th>Lebar (cm)</th>
+                        <th>Tinggi (cm)</th>
+                        <th>Qty</th>
+                        <th>Luas / Info</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- Baris ditambahkan via JS -->
+                </tbody>
+            </table>
+        </div>
+        <button id="tambah">+ Tambah Item</button>
+    </div>
+
+    <!-- Ringkasan -->
+    <div class="summary">
+        <div class="box">
+            <h3>Total Item</h3>
+            <h2 id="totalItem">0</h2>
+        </div>
+        <div class="box">
+            <h3>Total Luas Banner</h3>
+            <h2 id="totalLuas">0 m²</h2>
+        </div>
+        <div class="box">
+            <h3>Biaya Desain</h3>
+            <h2 id="totalDesain">Rp0</h2>
+        </div>
+        <div class="box highlight">
+            <h3>Total Tagihan</h3>
+            <h2 id="totalJual">Rp0</h2>
+        </div>
+    </div>
+
+    <div class="bottomButton">
+        <button id="btnMargin">📊 Hitung Margin Keuntungan</button>
+    </div>
+</div>
+
+<!-- Popup Margin -->
+<div class="popup" id="popup">
+    <div class="popupContent">
+        <h2>Rincian Margin Keuntungan</h2>
+        <div class="hasil">
+            <p>Total Modal (Partnership)</p>
+            <b id="popupModal">Rp0</b>
+        </div>
+        <div class="hasil">
+            <p>Biaya Desain</p>
+            <b id="popupDesain">Rp0</b>
+        </div>
+        <div class="hasil">
+            <p>Total Tagihan (Customer)</p>
+            <b id="popupJual">Rp0</b>
+        </div>
+        <div class="hasil">
+            <p>Keuntungan Bersih</p>
+            <b id="popupUntung" class="untung">Rp0</b>
+        </div>
+        <div class="hasil">
+            <p>Margin (%)</p>
+            <b id="popupMargin">0%</b>
+        </div>
+
+        <div class="detail-section">
+            <h4>📋 Rincian Per Item</h4>
+            <div id="detailItems"></div>
+        </div>
+        
+        <div class="popup-actions">
+            <button id="btnDownload" class="btn-popup">📥 Download</button>
+            <button id="tutupPopup" class="btn-popup">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tbody = document.getElementById("tbody");
+    const hargaNormal = document.getElementById("hargaNormal");
+    const hargaExpress = document.getElementById("hargaExpress");
+    const biayaDesain = document.getElementById("biayaDesain");
+
+    const totalItem = document.getElementById("totalItem");
+    const totalLuas = document.getElementById("totalLuas");
+    const totalDesain = document.getElementById("totalDesain");
+    const totalJual = document.getElementById("totalJual");
+
+    const popup = document.getElementById("popup");
+
+    // Fungsi toggle show/hide harga
+    function toggleHarga(inputId) {
+        const input = document.getElementById(inputId);
+        input.classList.toggle('masked');
+        
+        // Update icon
+        const btn = input.nextElementSibling;
+        if (input.classList.contains('masked')) {
+            btn.innerHTML = '️';
+            btn.title = 'Tampilkan Harga';
+        } else {
+            btn.innerHTML = '👁️‍🗨️';
+            btn.title = 'Sembunyikan Harga';
+        }
+    }
+
+    // Harga tetap untuk Y Banner & Roll Banner (tidak ikut pembulatan)
+    const HARGA_TETAP = {
+        "Y Banner": 160000,
+        "Roll Banner": 450000
+    };
+
+    // Modal partnership per jenis
+    const MODAL = {
+        "Normal": 17000,
+        "Express": 35000,
+        "Y Banner": 80000,
+        "Roll Banner": 300000
+    };
+
+    // Ukuran fixed untuk Y Banner & Roll Banner
+    const UKURAN_FIXED = {
+        "Y Banner": { lebar: 60, tinggi: 160 },
+        "Roll Banner": { lebar: 60, tinggi: 160 }
+    };
+
+    function roundUpTo50(val) {
+        if (val <= 0) return 0;
+        const rounded = Math.ceil(val / 50) * 50;
+        return rounded < 100 ? 100 : rounded;
+    }
+
+    function rupiah(n) {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0
+        }).format(n);
+    }
+
+    function tambahBaris(jenisDefault = "Normal") {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>
+                <select class="jenis">
+                    <option value="Normal">Normal</option>
+                    <option value="Express">Express</option>
+                    <option value="Y Banner">Y Banner</option>
+                    <option value="Roll Banner">Roll Banner</option>
+                </select>
+            </td>
+            <td class="cell-lebar"><input type="number" class="lebar" placeholder="0" min="0"></td>
+            <td class="cell-tinggi"><input type="number" class="tinggi" placeholder="0" min="0"></td>
+            <td><input type="number" class="qty" value="1" min="1"></td>
+            <td class="luas" style="font-weight:600; color:#2563eb; font-size:13px;">-</td>
+            <td class="harga" style="font-weight:700; font-size:13px;">Rp0</td>
+            <td><button class="hapus btn-hapus">🗑️</button></td>
+        `;
+        tbody.appendChild(tr);
+
+        const selectJenis = tr.querySelector(".jenis");
+        selectJenis.value = jenisDefault;
+
+        // Event listener untuk semua input di baris ini
+        tr.querySelectorAll("input, select").forEach(x => {
+            x.addEventListener("input", () => updateBaris(tr));
+            x.addEventListener("change", () => updateBaris(tr));
+        });
+
+        tr.querySelector(".hapus").addEventListener("click", () => {
+            tr.remove();
+            hitung();
+        });
+
+        updateBaris(tr);
+    }
+
+    function updateBaris(tr) {
+        const jenis = tr.querySelector(".jenis").value;
+        const lebarInput = tr.querySelector(".lebar");
+        const tinggiInput = tr.querySelector(".tinggi");
+        const cellLebar = tr.querySelector(".cell-lebar");
+        const cellTinggi = tr.querySelector(".cell-tinggi");
+        const qty = parseFloat(tr.querySelector(".qty").value) || 0;
+        const luasCell = tr.querySelector(".luas");
+        const hargaCell = tr.querySelector(".harga");
+
+        const isFixed = (jenis === "Y Banner" || jenis === "Roll Banner");
+
+        if (isFixed) {
+            // Sembunyikan input lebar/tinggi, tampilkan badge ukuran fixed
+            cellLebar.style.display = "none";
+            cellTinggi.style.display = "none";
+            const ukuran = UKURAN_FIXED[jenis];
+            luasCell.innerHTML = `<span class="badge-ukuran">${ukuran.lebar}×${ukuran.tinggi} cm</span>`;
+            
+            // Harga tetap, tidak bisa diubah
+            const total = qty * HARGA_TETAP[jenis];
+            hargaCell.innerText = rupiah(total);
+        } else {
+            // Tampilkan input lebar/tinggi
+            cellLebar.style.display = "table-cell";
+            cellTinggi.style.display = "table-cell";
+            
+            const lebarExact = parseFloat(lebarInput.value) || 0;
+            const tinggiExact = parseFloat(tinggiInput.value) || 0;
+            
+            // Luas absolute untuk tampilan
+            const luasExact = (lebarExact / 100) * (tinggiExact / 100) * qty;
+            luasCell.innerText = luasExact.toFixed(2) + " m²";
+            
+            // Perhitungan dengan pembulatan untuk tagihan
+            const lebarRounded = roundUpTo50(lebarExact);
+            const tinggiRounded = roundUpTo50(tinggiExact);
+            const luasRounded = (lebarRounded / 100) * (tinggiRounded / 100) * qty;
+            
+            const hargaPerM2 = jenis === "Normal" 
+                ? (parseFloat(hargaNormal.value) || 0) 
+                : (parseFloat(hargaExpress.value) || 0);
+            
+            const total = luasRounded * hargaPerM2;
+            hargaCell.innerText = rupiah(total);
+        }
+
+        hitung();
+    }
+
+    function hitung() {
+        let item = 0;
+        let luasTotalExact = 0;
+        let jualTotal = 0;
+        const desain = parseFloat(biayaDesain.value) || 0;
+
+        document.querySelectorAll("#tbody tr").forEach(tr => {
+            item++;
+            const jenis = tr.querySelector(".jenis").value;
+            const qty = parseFloat(tr.querySelector(".qty").value) || 0;
+            const isFixed = (jenis === "Y Banner" || jenis === "Roll Banner");
+
+            if (isFixed) {
+                jualTotal += qty * HARGA_TETAP[jenis];
+            } else {
+                const lebarExact = parseFloat(tr.querySelector(".lebar").value) || 0;
+                const tinggiExact = parseFloat(tr.querySelector(".tinggi").value) || 0;
+                luasTotalExact += (lebarExact / 100) * (tinggiExact / 100) * qty;
+                
+                const lebarRounded = roundUpTo50(lebarExact);
+                const tinggiRounded = roundUpTo50(tinggiExact);
+                const luasRounded = (lebarRounded / 100) * (tinggiRounded / 100) * qty;
+                
+                const hargaPerM2 = jenis === "Normal" 
+                    ? (parseFloat(hargaNormal.value) || 0) 
+                    : (parseFloat(hargaExpress.value) || 0);
+                
+                jualTotal += luasRounded * hargaPerM2;
+            }
+        });
+
+        const grandTotal = jualTotal + desain;
+
+        totalItem.innerText = item;
+        totalLuas.innerText = luasTotalExact.toFixed(2) + " m²";
+        totalDesain.innerText = rupiah(desain);
+        totalJual.innerText = rupiah(grandTotal);
+    }
+
+    document.getElementById("tambah").addEventListener("click", () => tambahBaris());
+    hargaNormal.addEventListener("input", () => {
+        document.querySelectorAll("#tbody tr").forEach(tr => updateBaris(tr));
+    });
+    hargaExpress.addEventListener("input", () => {
+        document.querySelectorAll("#tbody tr").forEach(tr => updateBaris(tr));
+    });
+    biayaDesain.addEventListener("input", hitung);
+
+    // Popup Margin dengan Password
+    document.getElementById("btnMargin").addEventListener("click", () => {
+        const pass = prompt("Masukkan Password untuk melihat Margin:");
+        if (pass !== "3000") {
+            alert("Password salah! Akses ditolak.");
+            return;
+        }
+
+        const desain = parseFloat(biayaDesain.value) || 0;
+        let totalModal = 0;
+        let totalJualBanner = 0;
+        let detailHTML = "";
+
+        document.querySelectorAll("#tbody tr").forEach((tr, idx) => {
+            const jenis = tr.querySelector(".jenis").value;
+            const qty = parseFloat(tr.querySelector(".qty").value) || 0;
+            const isFixed = (jenis === "Y Banner" || jenis === "Roll Banner");
+            const modalSatuan = MODAL[jenis];
+            const modalBaris = qty * modalSatuan;
+            totalModal += modalBaris;
+
+            let jualBaris = 0;
+            let infoUkuran = "";
+
+            if (isFixed) {
+                jualBaris = qty * HARGA_TETAP[jenis];
+                const ukuran = UKURAN_FIXED[jenis];
+                infoUkuran = `${ukuran.lebar}×${ukuran.tinggi} cm (fixed)`;
+            } else {
+                const l = parseFloat(tr.querySelector(".lebar").value) || 0;
+                const t = parseFloat(tr.querySelector(".tinggi").value) || 0;
+                const luasExact = (l / 100) * (t / 100) * qty;
+                const lRound = roundUpTo50(l);
+                const tRound = roundUpTo50(t);
+                const luasRounded = (lRound / 100) * (tRound / 100) * qty;
+                const hargaPerM2 = jenis === "Normal" 
+                    ? (parseFloat(hargaNormal.value) || 0) 
+                    : (parseFloat(hargaExpress.value) || 0);
+                jualBaris = luasRounded * hargaPerM2;
+                infoUkuran = `${l}×${t} cm → ${lRound}×${tRound} cm | ${luasExact.toFixed(2)} m² (abs) / ${luasRounded.toFixed(2)} m² (bill)`;
+            }
+
+            totalJualBanner += jualBaris;
+
+            detailHTML += `
+                <div class="detail-row">
+                    <span>${idx + 1}. ${jenis} × ${qty}</span>
+                    <span>${rupiah(jualBaris)}</span>
+                </div>
+                <div class="detail-row" style="padding-left:16px; font-size:11px; color:#94a3b8;">
+                    <span>${infoUkuran} | Modal: ${rupiah(modalBaris)}</span>
+                    <span></span>
+                </div>
+            `;
+        });
+
+        const grandTotalJual = totalJualBanner + desain;
+        const untung = grandTotalJual - totalModal;
+        const margin = grandTotalJual > 0 ? ((untung / grandTotalJual) * 100).toFixed(1) : 0;
+
+        document.getElementById("popupModal").innerText = rupiah(totalModal);
+        document.getElementById("popupDesain").innerText = rupiah(desain);
+        document.getElementById("popupJual").innerText = rupiah(grandTotalJual);
+        document.getElementById("popupUntung").innerText = rupiah(untung);
+        document.getElementById("popupMargin").innerText = margin + " %";
+        document.getElementById("detailItems").innerHTML = detailHTML || '<div style="text-align:center; color:#94a3b8; padding:10px;">Belum ada item</div>';
+
+        popup.style.display = "flex";
+    });
+
+    // Download Rincian
+    document.getElementById("btnDownload").addEventListener("click", () => {
+        const modalTxt = document.getElementById("popupModal").innerText;
+        const desainTxt = document.getElementById("popupDesain").innerText;
+        const jualTxt = document.getElementById("popupJual").innerText;
+        const untungTxt = document.getElementById("popupUntung").innerText;
+        const marginTxt = document.getElementById("popupMargin").innerText;
+
+        let detailText = "";
+        document.querySelectorAll("#tbody tr").forEach((tr, idx) => {
+            const jenis = tr.querySelector(".jenis").value;
+            const qty = parseFloat(tr.querySelector(".qty").value) || 0;
+            const isFixed = (jenis === "Y Banner" || jenis === "Roll Banner");
+            const modalSatuan = MODAL[jenis];
+            
+            if (isFixed) {
+                const ukuran = UKURAN_FIXED[jenis];
+                detailText += `${idx + 1}. ${jenis} ${ukuran.lebar}×${ukuran.tinggi}cm × ${qty} = ${rupiah(qty * HARGA_TETAP[jenis])} | Modal: ${rupiah(qty * modalSatuan)}\n`;
+            } else {
+                const l = parseFloat(tr.querySelector(".lebar").value) || 0;
+                const t = parseFloat(tr.querySelector(".tinggi").value) || 0;
+                const lRound = roundUpTo50(l);
+                const tRound = roundUpTo50(t);
+                const hargaPerM2 = jenis === "Normal" 
+                    ? (parseFloat(hargaNormal.value) || 0) 
+                    : (parseFloat(hargaExpress.value) || 0);
+                const luasRounded = (lRound / 100) * (tRound / 100) * qty;
+                detailText += `${idx + 1}. ${jenis} ${l}×${t}cm (${lRound}×${tRound}) × ${qty} = ${rupiah(luasRounded * hargaPerM2)} | Modal: ${rupiah(qty * modalSatuan)}\n`;
+            }
+        });
+
+        const text = `RINCIAN MARGIN KEUNTUNGAN (INTERNAL)\n` +
+                     `====================================\n` +
+                     `Tanggal: ${new Date().toLocaleString('id-ID')}\n\n` +
+                     `DETAIL ITEM:\n${detailText}\n` +
+                     `====================================\n` +
+                     `Total Modal      : ${modalTxt}\n` +
+                     `Biaya Desain     : ${desainTxt}\n` +
+                     `Total Tagihan    : ${jualTxt}\n` +
+                     `Keuntungan Bersih: ${untungTxt}\n` +
+                     `Margin           : ${marginTxt}\n` +
+                     `====================================`;
+
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Rincian_Margin_${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("tutupPopup").addEventListener("click", () => {
+        popup.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === popup) {
+            popup.style.display = "none";
+        }
+    });
+
+    // Inisialisasi: tambah 1 baris default
+    tambahBaris("Normal");
+</script>
+
+</body>
+</html>
