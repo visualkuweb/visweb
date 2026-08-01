@@ -1,894 +1,1364 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualku Printing Kasir</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --navy: #0f172a;
-            --navy-light: #1e293b;
-            --blue: #2563eb;
-            --blue-glow: rgba(37, 99, 235, 0.15);
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-            --radius: 1.5rem;
-            --radius-sm: 0.75rem;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        body {
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            padding: 24px;
-            color: var(--navy);
-        }
-
-        .container { max-width: 1100px; margin: auto; }
-
-        .header { text-align: center; color: white; margin-bottom: 32px; }
-        .header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-        .header p { opacity: 0.8; margin-top: 6px; font-size: 15px; font-weight: 500; }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-        }
-
-        .grid-settings {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--navy-light);
-            font-size: 14px;
-        }
-
-        .input-wrapper { position: relative; margin-bottom: 4px; }
-
-        .input-wrapper input,
-        .input-wrapper select {
-            width: 100%;
-            border: none;
-            border-bottom: 2px solid #cbd5e1;
-            background: transparent;
-            padding: 12px 4px;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--navy);
-            outline: none;
-            transition: border-color 0.3s ease;
-            appearance: none;
-            -webkit-appearance: none;
-        }
-
-        /* Style untuk input yang di-mask (hidden) */
-        .input-wrapper input.masked {
-            color: transparent;
-            text-shadow: 0 0 8px rgba(0,0,0,0.5);
-            letter-spacing: 2px;
-        }
-
-        .input-wrapper input.masked::-moz-selection {
-            color: transparent;
-            background: var(--blue);
-        }
-
-        .input-wrapper input.masked::selection {
-            color: transparent;
-            background: var(--blue);
-        }
-
-        .input-wrapper select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230f172a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0 center;
-            padding-right: 24px;
-        }
-
-        .input-wrapper .line {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--blue);
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .input-wrapper input:focus,
-        .input-wrapper select:focus { border-bottom-color: transparent; }
-        .input-wrapper input:focus ~ .line,
-        .input-wrapper select:focus ~ .line { width: 100%; }
-
-        /* Toggle button untuk show/hide harga */
-        .toggle-harga {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            color: var(--blue);
-            font-size: 18px;
-            transition: all 0.2s;
-            z-index: 10;
-        }
-
-        .toggle-harga:hover {
-            color: var(--navy);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .table-wrapper { overflow-x: auto; }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-top: 8px;
-            min-width: 700px;
-        }
-
-        th {
-            background: var(--navy);
-            color: white;
-            padding: 14px 10px;
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        th:first-child { border-radius: 12px 0 0 0; }
-        th:last-child { border-radius: 0 12px 0 0; }
-
-        td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #f1f5f9;
-            text-align: center;
-            font-size: 14px;
-            color: var(--navy-light);
-            vertical-align: middle;
-        }
-
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #f8fafc; }
-
-        td input, td select {
-            width: 100%;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 8px 4px;
-            font-size: 13px;
-            outline: none;
-            transition: all 0.2s;
-            background: white;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 500;
-        }
-
-        td select {
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%230f172a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 6px center;
-            padding-right: 20px;
-            cursor: pointer;
-        }
-
-        td input:focus, td select:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px var(--blue-glow);
-        }
-
-        .badge-ukuran {
-            display: inline-block;
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .btn-hapus {
-            background: #fee2e2;
-            color: #ef4444;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-hapus:hover {
-            background: #ef4444;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        #tambah {
-            margin-top: 16px;
-            background: white;
-            color: var(--blue);
-            border: 2px dashed var(--blue);
-            padding: 12px;
-            width: 100%;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        #tambah:hover {
-            background: var(--blue);
-            color: white;
-            border-style: solid;
-        }
-
-        .summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 24px;
-        }
-
-        .box {
-            background: white;
-            border-radius: var(--radius);
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(255,255,255,0.5);
-            transition: transform 0.3s ease;
-        }
-
-        .box:hover { transform: translateY(-4px); }
-
-        .box h3 {
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 8px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .box h2 { color: var(--blue); font-size: 24px; font-weight: 800; }
-        .box.highlight h2 { color: #16a34a; }
-
-        .bottomButton { text-align: center; margin-top: 32px; }
-
-        #btnMargin {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-            color: white;
-            padding: 16px 48px;
-            border: none;
-            border-radius: 100px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
-        }
-
-        #btnMargin:hover {
-            transform: scale(1.03) translateY(-2px);
-            box-shadow: 0 12px 28px rgba(22, 163, 74, 0.4);
-        }
-
-        .popup {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            z-index: 100;
-        }
-
-        .popupContent {
-            background: white;
-            width: 100%;
-            max-width: 450px;
-            border-radius: var(--radius);
-            padding: 28px;
-            animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        @keyframes pop {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .popupContent h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--navy);
-            font-size: 20px;
-        }
-
-        .hasil {
-            display: flex;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 14px;
-        }
-
-        .hasil:last-of-type { border-bottom: none; }
-        .hasil p { color: #64748b; font-weight: 500; }
-        .hasil b { color: var(--navy); font-weight: 700; }
-        .hasil b.untung { color: #16a34a; font-size: 16px; }
-
-        .popup-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .btn-popup {
-            padding: 14px;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        #tutupPopup { background: var(--navy); color: white; }
-        #tutupPopup:hover { background: var(--navy-light); }
-        #btnDownload { background: var(--blue); color: white; }
-        #btnDownload:hover { background: #1d4ed8; }
-
-        .detail-section {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 2px dashed #e2e8f0;
-        }
-
-        .detail-section h4 {
-            font-size: 12px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            font-size: 12px;
-            color: #475569;
-        }
-
-        .detail-row span:last-child { font-weight: 600; color: var(--navy); }
-
-        /* Info tooltip untuk harga yang di-hide */
-        .harga-hidden-info {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #fef3c7;
-            color: #92400e;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 16px; }
-            .header h1 { font-size: 24px; }
-            .grid-settings { grid-template-columns: 1fr; gap: 20px; }
-            .summary { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-    <div class="header">
-        <h1>Visualku Printing Kasir</h1>
-        <p>Harga sistem Update 2026 - 2027</p>
-    </div>
-
-    <!-- Card Pengaturan Global -->
-    <div class="card">
-        <div class="grid-settings">
-            <div class="input-wrapper">
-                <label>Harga Normal / m² (Default)</label>
-                <input type="number" id="hargaNormal" value="35000" placeholder="35000" class="masked">
-                <button class="toggle-harga" onclick="toggleHarga('hargaNormal')" title="Tampilkan/Sembunyikan Harga">👁️</button>
-                <div class="line"></div>
-                <div class="harga-hidden-info">🔒 Harga disembunyikan</div>
-            </div>
-
-            <div class="input-wrapper">
-                <label>Harga Express / m² (Default)</label>
-                <input type="number" id="hargaExpress" value="45000" placeholder="45000" class="masked">
-                <button class="toggle-harga" onclick="toggleHarga('hargaExpress')" title="Tampilkan/Sembunyikan Harga">👁️</button>
-                <div class="line"></div>
-                <div class="harga-hidden-info">🔒 Harga disembunyikan</div>
-            </div>
-
-            <div class="input-wrapper">
-                <label>Tambahan Biaya Desain (Rp)</label>
-                <input type="number" id="biayaDesain" value="0" placeholder="0">
-                <div class="line"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tabel Unified -->
-    <div class="card">
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Jenis</th>
-                        <th>Lebar (cm)</th>
-                        <th>Tinggi (cm)</th>
-                        <th>Qty</th>
-                        <th>Luas / Info</th>
-                        <th>Total</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                    <!-- Baris ditambahkan via JS -->
-                </tbody>
-            </table>
-        </div>
-        <button id="tambah">+ Tambah Item</button>
-    </div>
-
-    <!-- Ringkasan -->
-    <div class="summary">
-        <div class="box">
-            <h3>Total Item</h3>
-            <h2 id="totalItem">0</h2>
-        </div>
-        <div class="box">
-            <h3>Total Luas Banner</h3>
-            <h2 id="totalLuas">0 m²</h2>
-        </div>
-        <div class="box">
-            <h3>Biaya Desain</h3>
-            <h2 id="totalDesain">Rp0</h2>
-        </div>
-        <div class="box highlight">
-            <h3>Total Tagihan</h3>
-            <h2 id="totalJual">Rp0</h2>
-        </div>
-    </div>
-
-    <div class="bottomButton">
-        <button id="btnMargin">📊 Hitung Margin Keuntungan</button>
-    </div>
-</div>
-
-<!-- Popup Margin -->
-<div class="popup" id="popup">
-    <div class="popupContent">
-        <h2>Rincian Margin Keuntungan</h2>
-        <div class="hasil">
-            <p>Total Modal (Partnership)</p>
-            <b id="popupModal">Rp0</b>
-        </div>
-        <div class="hasil">
-            <p>Biaya Desain</p>
-            <b id="popupDesain">Rp0</b>
-        </div>
-        <div class="hasil">
-            <p>Total Tagihan (Customer)</p>
-            <b id="popupJual">Rp0</b>
-        </div>
-        <div class="hasil">
-            <p>Keuntungan Bersih</p>
-            <b id="popupUntung" class="untung">Rp0</b>
-        </div>
-        <div class="hasil">
-            <p>Margin (%)</p>
-            <b id="popupMargin">0%</b>
-        </div>
-
-        <div class="detail-section">
-            <h4>📋 Rincian Per Item</h4>
-            <div id="detailItems"></div>
-        </div>
-        
-        <div class="popup-actions">
-            <button id="btnDownload" class="btn-popup">📥 Download</button>
-            <button id="tutupPopup" class="btn-popup">Tutup</button>
-        </div>
-    </div>
-</div>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VisualKu Order & Kasir System</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
-    const tbody = document.getElementById("tbody");
-    const hargaNormal = document.getElementById("hargaNormal");
-    const hargaExpress = document.getElementById("hargaExpress");
-    const biayaDesain = document.getElementById("biayaDesain");
-
-    const totalItem = document.getElementById("totalItem");
-    const totalLuas = document.getElementById("totalLuas");
-    const totalDesain = document.getElementById("totalDesain");
-    const totalJual = document.getElementById("totalJual");
-
-    const popup = document.getElementById("popup");
-
-    // Fungsi toggle show/hide harga
-    function toggleHarga(inputId) {
-        const input = document.getElementById(inputId);
-        input.classList.toggle('masked');
-        
-        // Update icon
-        const btn = input.nextElementSibling;
-        if (input.classList.contains('masked')) {
-            btn.innerHTML = '️';
-            btn.title = 'Tampilkan Harga';
-        } else {
-            btn.innerHTML = '👁️‍🗨️';
-            btn.title = 'Sembunyikan Harga';
-        }
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+        colors: {
+          border: 'hsl(var(--border))', input: 'hsl(var(--input))', ring: 'hsl(var(--ring))',
+          background: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))',
+          primary: { DEFAULT: 'hsl(221.2 83.2% 53.3%)', foreground: 'hsl(210 40% 98%)' },
+          secondary: { DEFAULT: 'hsl(210 40% 96.1%)', foreground: 'hsl(222.2 47.4% 11.2%)' },
+          muted: { DEFAULT: 'hsl(210 40% 96.1%)', foreground: 'hsl(215.4 16.3% 46.9%)' },
+          accent: { DEFAULT: 'hsl(210 40% 96.1%)', foreground: 'hsl(222.2 47.4% 11.2%)' },
+          destructive: { DEFAULT: 'hsl(0 84.2% 60.2%)', foreground: 'hsl(210 40% 98%)' },
+          card: { DEFAULT: 'hsl(0 0% 100%)', foreground: 'hsl(222.2 84% 4.9%)' },
+        },
+        borderRadius: { lg: '0.5rem', md: 'calc(0.5rem - 2px)', sm: 'calc(0.5rem - 4px)' }
+      }
     }
-
-    // Harga tetap untuk Y Banner & Roll Banner (tidak ikut pembulatan)
-    const HARGA_TETAP = {
-        "Y Banner": 160000,
-        "Roll Banner": 450000
-    };
-
-    // Modal partnership per jenis
-    const MODAL = {
-        "Normal": 17000,
-        "Express": 35000,
-        "Y Banner": 80000,
-        "Roll Banner": 300000
-    };
-
-    // Ukuran fixed untuk Y Banner & Roll Banner
-    const UKURAN_FIXED = {
-        "Y Banner": { lebar: 60, tinggi: 160 },
-        "Roll Banner": { lebar: 60, tinggi: 160 }
-    };
-
-    function roundUpTo50(val) {
-        if (val <= 0) return 0;
-        const rounded = Math.ceil(val / 50) * 50;
-        return rounded < 100 ? 100 : rounded;
-    }
-
-    function rupiah(n) {
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            maximumFractionDigits: 0
-        }).format(n);
-    }
-
-    function tambahBaris(jenisDefault = "Normal") {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>
-                <select class="jenis">
-                    <option value="Normal">Normal</option>
-                    <option value="Express">Express</option>
-                    <option value="Y Banner">Y Banner</option>
-                    <option value="Roll Banner">Roll Banner</option>
-                </select>
-            </td>
-            <td class="cell-lebar"><input type="number" class="lebar" placeholder="0" min="0"></td>
-            <td class="cell-tinggi"><input type="number" class="tinggi" placeholder="0" min="0"></td>
-            <td><input type="number" class="qty" value="1" min="1"></td>
-            <td class="luas" style="font-weight:600; color:#2563eb; font-size:13px;">-</td>
-            <td class="harga" style="font-weight:700; font-size:13px;">Rp0</td>
-            <td><button class="hapus btn-hapus">🗑️</button></td>
-        `;
-        tbody.appendChild(tr);
-
-        const selectJenis = tr.querySelector(".jenis");
-        selectJenis.value = jenisDefault;
-
-        // Event listener untuk semua input di baris ini
-        tr.querySelectorAll("input, select").forEach(x => {
-            x.addEventListener("input", () => updateBaris(tr));
-            x.addEventListener("change", () => updateBaris(tr));
-        });
-
-        tr.querySelector(".hapus").addEventListener("click", () => {
-            tr.remove();
-            hitung();
-        });
-
-        updateBaris(tr);
-    }
-
-    function updateBaris(tr) {
-        const jenis = tr.querySelector(".jenis").value;
-        const lebarInput = tr.querySelector(".lebar");
-        const tinggiInput = tr.querySelector(".tinggi");
-        const cellLebar = tr.querySelector(".cell-lebar");
-        const cellTinggi = tr.querySelector(".cell-tinggi");
-        const qty = parseFloat(tr.querySelector(".qty").value) || 0;
-        const luasCell = tr.querySelector(".luas");
-        const hargaCell = tr.querySelector(".harga");
-
-        const isFixed = (jenis === "Y Banner" || jenis === "Roll Banner");
-
-        if (isFixed) {
-            // Sembunyikan input lebar/tinggi, tampilkan badge ukuran fixed
-            cellLebar.style.display = "none";
-            cellTinggi.style.display = "none";
-            const ukuran = UKURAN_FIXED[jenis];
-            luasCell.innerHTML = `<span class="badge-ukuran">${ukuran.lebar}×${ukuran.tinggi} cm</span>`;
-            
-            // Harga tetap, tidak bisa diubah
-            const total = qty * HARGA_TETAP[jenis];
-            hargaCell.innerText = rupiah(total);
-        } else {
-            // Tampilkan input lebar/tinggi
-            cellLebar.style.display = "table-cell";
-            cellTinggi.style.display = "table-cell";
-            
-            const lebarExact = parseFloat(lebarInput.value) || 0;
-            const tinggiExact = parseFloat(tinggiInput.value) || 0;
-            
-            // Luas absolute untuk tampilan
-            const luasExact = (lebarExact / 100) * (tinggiExact / 100) * qty;
-            luasCell.innerText = luasExact.toFixed(2) + " m²";
-            
-            // Perhitungan dengan pembulatan untuk tagihan
-            const lebarRounded = roundUpTo50(lebarExact);
-            const tinggiRounded = roundUpTo50(tinggiExact);
-            const luasRounded = (lebarRounded / 100) * (tinggiRounded / 100) * qty;
-            
-            const hargaPerM2 = jenis === "Normal" 
-                ? (parseFloat(hargaNormal.value) || 0) 
-                : (parseFloat(hargaExpress.value) || 0);
-            
-            const total = luasRounded * hargaPerM2;
-            hargaCell.innerText = rupiah(total);
-        }
-
-        hitung();
-    }
-
-    function hitung() {
-        let item = 0;
-        let luasTotalExact = 0;
-        let jualTotal = 0;
-        const desain = parseFloat(biayaDesain.value) || 0;
-
-        document.querySelectorAll("#tbody tr").forEach(tr => {
-            item++;
-            const jenis = tr.querySelector(".jenis").value;
-            const qty = parseFloat(tr.querySelector(".qty").value) || 0;
-            const isFixed = (jenis === "Y Banner" || jenis === "Roll Banner");
-
-            if (isFixed) {
-                jualTotal += qty * HARGA_TETAP[jenis];
-            } else {
-                const lebarExact = parseFloat(tr.querySelector(".lebar").value) || 0;
-                const tinggiExact = parseFloat(tr.querySelector(".tinggi").value) || 0;
-                luasTotalExact += (lebarExact / 100) * (tinggiExact / 100) * qty;
-                
-                const lebarRounded = roundUpTo50(lebarExact);
-                const tinggiRounded = roundUpTo50(tinggiExact);
-                const luasRounded = (lebarRounded / 100) * (tinggiRounded / 100) * qty;
-                
-                const hargaPerM2 = jenis === "Normal" 
-                    ? (parseFloat(hargaNormal.value) || 0) 
-                    : (parseFloat(hargaExpress.value) || 0);
-                
-                jualTotal += luasRounded * hargaPerM2;
-            }
-        });
-
-        const grandTotal = jualTotal + desain;
-
-        totalItem.innerText = item;
-        totalLuas.innerText = luasTotalExact.toFixed(2) + " m²";
-        totalDesain.innerText = rupiah(desain);
-        totalJual.innerText = rupiah(grandTotal);
-    }
-
-    document.getElementById("tambah").addEventListener("click", () => tambahBaris());
-    hargaNormal.addEventListener("input", () => {
-        document.querySelectorAll("#tbody tr").forEach(tr => updateBaris(tr));
-    });
-    hargaExpress.addEventListener("input", () => {
-        document.querySelectorAll("#tbody tr").forEach(tr => updateBaris(tr));
-    });
-    biayaDesain.addEventListener("input", hitung);
-
-    // Popup Margin dengan Password
-    document.getElementById("btnMargin").addEventListener("click", () => {
-        const pass = prompt("Masukkan Password untuk melihat Margin:");
-        if (pass !== "3000") {
-            alert("Password salah! Akses ditolak.");
-            return;
-        }
-
-        const desain = parseFloat(biayaDesain.value) || 0;
-        let totalModal = 0;
-        let totalJualBanner = 0;
-        let detailHTML = "";
-
-        document.querySelectorAll("#tbody tr").forEach((tr, idx) => {
-            const jenis = tr.querySelector(".jenis").value;
-            const qty = parseFloat(tr.querySelector(".qty").value) || 0;
-            const isFixed = (jenis === "Y Banner" || jenis === "Roll Banner");
-            const modalSatuan = MODAL[jenis];
-            const modalBaris = qty * modalSatuan;
-            totalModal += modalBaris;
-
-            let jualBaris = 0;
-            let infoUkuran = "";
-
-            if (isFixed) {
-                jualBaris = qty * HARGA_TETAP[jenis];
-                const ukuran = UKURAN_FIXED[jenis];
-                infoUkuran = `${ukuran.lebar}×${ukuran.tinggi} cm (fixed)`;
-            } else {
-                const l = parseFloat(tr.querySelector(".lebar").value) || 0;
-                const t = parseFloat(tr.querySelector(".tinggi").value) || 0;
-                const luasExact = (l / 100) * (t / 100) * qty;
-                const lRound = roundUpTo50(l);
-                const tRound = roundUpTo50(t);
-                const luasRounded = (lRound / 100) * (tRound / 100) * qty;
-                const hargaPerM2 = jenis === "Normal" 
-                    ? (parseFloat(hargaNormal.value) || 0) 
-                    : (parseFloat(hargaExpress.value) || 0);
-                jualBaris = luasRounded * hargaPerM2;
-                infoUkuran = `${l}×${t} cm → ${lRound}×${tRound} cm | ${luasExact.toFixed(2)} m² (abs) / ${luasRounded.toFixed(2)} m² (bill)`;
-            }
-
-            totalJualBanner += jualBaris;
-
-            detailHTML += `
-                <div class="detail-row">
-                    <span>${idx + 1}. ${jenis} × ${qty}</span>
-                    <span>${rupiah(jualBaris)}</span>
-                </div>
-                <div class="detail-row" style="padding-left:16px; font-size:11px; color:#94a3b8;">
-                    <span>${infoUkuran} | Modal: ${rupiah(modalBaris)}</span>
-                    <span></span>
-                </div>
-            `;
-        });
-
-        const grandTotalJual = totalJualBanner + desain;
-        const untung = grandTotalJual - totalModal;
-        const margin = grandTotalJual > 0 ? ((untung / grandTotalJual) * 100).toFixed(1) : 0;
-
-        document.getElementById("popupModal").innerText = rupiah(totalModal);
-        document.getElementById("popupDesain").innerText = rupiah(desain);
-        document.getElementById("popupJual").innerText = rupiah(grandTotalJual);
-        document.getElementById("popupUntung").innerText = rupiah(untung);
-        document.getElementById("popupMargin").innerText = margin + " %";
-        document.getElementById("detailItems").innerHTML = detailHTML || '<div style="text-align:center; color:#94a3b8; padding:10px;">Belum ada item</div>';
-
-        popup.style.display = "flex";
-    });
-
-    // Download Rincian
-    document.getElementById("btnDownload").addEventListener("click", () => {
-        const modalTxt = document.getElementById("popupModal").innerText;
-        const desainTxt = document.getElementById("popupDesain").innerText;
-        const jualTxt = document.getElementById("popupJual").innerText;
-        const untungTxt = document.getElementById("popupUntung").innerText;
-        const marginTxt = document.getElementById("popupMargin").innerText;
-
-        let detailText = "";
-        document.querySelectorAll("#tbody tr").forEach((tr, idx) => {
-            const jenis = tr.querySelector(".jenis").value;
-            const qty = parseFloat(tr.querySelector(".qty").value) || 0;
-            const isFixed = (jenis === "Y Banner" || jenis === "Roll Banner");
-            const modalSatuan = MODAL[jenis];
-            
-            if (isFixed) {
-                const ukuran = UKURAN_FIXED[jenis];
-                detailText += `${idx + 1}. ${jenis} ${ukuran.lebar}×${ukuran.tinggi}cm × ${qty} = ${rupiah(qty * HARGA_TETAP[jenis])} | Modal: ${rupiah(qty * modalSatuan)}\n`;
-            } else {
-                const l = parseFloat(tr.querySelector(".lebar").value) || 0;
-                const t = parseFloat(tr.querySelector(".tinggi").value) || 0;
-                const lRound = roundUpTo50(l);
-                const tRound = roundUpTo50(t);
-                const hargaPerM2 = jenis === "Normal" 
-                    ? (parseFloat(hargaNormal.value) || 0) 
-                    : (parseFloat(hargaExpress.value) || 0);
-                const luasRounded = (lRound / 100) * (tRound / 100) * qty;
-                detailText += `${idx + 1}. ${jenis} ${l}×${t}cm (${lRound}×${tRound}) × ${qty} = ${rupiah(luasRounded * hargaPerM2)} | Modal: ${rupiah(qty * modalSatuan)}\n`;
-            }
-        });
-
-        const text = `RINCIAN MARGIN KEUNTUNGAN (INTERNAL)\n` +
-                     `====================================\n` +
-                     `Tanggal: ${new Date().toLocaleString('id-ID')}\n\n` +
-                     `DETAIL ITEM:\n${detailText}\n` +
-                     `====================================\n` +
-                     `Total Modal      : ${modalTxt}\n` +
-                     `Biaya Desain     : ${desainTxt}\n` +
-                     `Total Tagihan    : ${jualTxt}\n` +
-                     `Keuntungan Bersih: ${untungTxt}\n` +
-                     `Margin           : ${marginTxt}\n` +
-                     `====================================`;
-
-        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Rincian_Margin_${Date.now()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-    });
-
-    document.getElementById("tutupPopup").addEventListener("click", () => {
-        popup.style.display = "none";
-    });
-
-    window.addEventListener("click", (e) => {
-        if (e.target === popup) {
-            popup.style.display = "none";
-        }
-    });
-
-    // Inisialisasi: tambah 1 baris default
-    tambahBaris("Normal");
+  }
 </script>
 
+<!-- Firebase Compat -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<!-- React & ReactDOM -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --background: 0 0% 100%; --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%; --card-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%; --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%; --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%; --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%; --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%; --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%; --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+  }
+  .dark {
+    --background: 222.2 84% 4.9%; --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%; --card-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%; --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%; --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%; --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%; --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%; --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%; --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  * { border-color: hsl(var(--border)); }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.3); border-radius: 3px; }
+  
+  @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .animate-floating { animation: floating 5s ease-in-out infinite; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-fadeInUp { animation: fadeInUp 0.5s ease-out; }
+  
+  .input-underline { position: relative; }
+  .input-underline::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #2563eb; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+  .input-underline:focus-within::after { width: 100%; }
+  
+  .badge-baru { background: #fef3c7; color: #92400e; }
+  .badge-lunas { background: #d1fae5; color: #065f46; }
+  
+  .btn-tagihan { background: linear-gradient(135deg, #fef9c3, #fde047); color: #854d0e; }
+  .btn-konfirmasi { background: linear-gradient(135deg, #cffafe, #a5f3fc); color: #164e63; }
+  .btn-terimakasih { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; }
+  .btn-hapus { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; }
+  .btn-edit { background: linear-gradient(135deg, #fef9c3, #fde047); color: #854d0e; }
+  .btn-reset { background: linear-gradient(135deg, #e2e8f0, #cbd5e1); color: #475569; }
+  .btn-search { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; }
+  .btn-save { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+  .btn-logout { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; }
+  .btn-download { background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; }
+  .btn-margin { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; }
+  
+  .btn-tagihan:hover, .btn-konfirmasi:hover, .btn-terimakasih:hover, .btn-hapus:hover, .btn-edit:hover, .btn-reset:hover, .btn-search:hover, .btn-save:hover, .btn-logout:hover, .btn-download:hover, .btn-margin:hover { transform: scale(1.05); filter: brightness(1.05); }
+  
+  .profit-positive { color: #10b981; font-weight: 800; }
+  .profit-negative { color: #ef4444; font-weight: 800; }
+
+  /* Masked Input Style for Kasir */
+  .masked-text {
+    color: transparent !important;
+    text-shadow: 0 0 8px rgba(0,0,0,0.5);
+    letter-spacing: 2px;
+  }
+  .dark .masked-text {
+    text-shadow: 0 0 8px rgba(255,255,255,0.4);
+  }
+  .masked-text::selection {
+    background: #2563eb;
+    color: transparent;
+  }
+</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-foreground transition-colors duration-300">
+<div id="root"></div>
+
+<script type="text/babel" data-type="module">
+const { useState, useEffect, useMemo, createContext, useContext } = React;
+
+// ==================== FIREBASE INITIALIZATION ====================
+const firebaseConfig = {
+  apiKey: "AIzaSyCRa16yTbMTAIyRs0zzUoYPHD3AWfbgsO0",
+  authDomain: "visuakuorder.firebaseapp.com",
+  projectId: "visuakuorder",
+  storageBucket: "visuakuorder.firebasestorage.app",
+  messagingSenderId: "241667594199",
+  appId: "1:241667594199:web:7007f033daa62afb015d92"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ==================== ICONS ====================
+const Icon = ({ path, className = "w-5 h-5", strokeWidth = 2 }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>{path}</svg>
+);
+const Icons = {
+  Dashboard: (p) => <Icon {...p} path={<><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></>} />,
+  FileText: (p) => <Icon {...p} path={<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>} />,
+  Dollar: (p) => <Icon {...p} path={<><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></>} />,
+  Users: (p) => <Icon {...p} path={<><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>} />,
+  Search: (p) => <Icon {...p} path={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} />,
+  Plus: (p) => <Icon {...p} path={<><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>} />,
+  Edit: (p) => <Icon {...p} path={<><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></>} />,
+  Trash: (p) => <Icon {...p} path={<><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></>} />,
+  X: (p) => <Icon {...p} path={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} />,
+  ChevronLeft: (p) => <Icon {...p} path={<><polyline points="15 18 9 12 15 6"/></>} />,
+  Menu: (p) => <Icon {...p} path={<><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></>} />,
+  Lock: (p) => <Icon {...p} path={<><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>} />,
+  Sun: (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></>} />,
+  Moon: (p) => <Icon {...p} path={<><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></>} />,
+  Logout: (p) => <Icon {...p} path={<><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></>} />,
+  Refresh: (p) => <Icon {...p} path={<><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></>} />,
+  Eye: (p) => <Icon {...p} path={<><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>} />,
+  EyeOff: (p) => <Icon {...p} path={<><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></>} />,
+  Download: (p) => <Icon {...p} path={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></>} />,
+  Calculator: (p) => <Icon {...p} path={<><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="18" x2="16" y2="18"/><line x1="8" y1="18" x2="8" y2="18"/><line x1="12" y1="18" x2="12" y2="18"/></>} />,
+};
+
+// ==================== UTILITIES ====================
+const formatCurrency = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n || 0);
+const formatDate = (d) => { if (!d) return '-'; const date = typeof d === 'string' ? new Date(d) : d; return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }); };
+const genId = () => Math.random().toString(36).substr(2, 9);
+const generateOrderNumber = () => {
+  const today = new Date();
+  const dateStr = today.getDate().toString().padStart(2, '0') + (today.getMonth() + 1).toString().padStart(2, '0') + today.getFullYear().toString().slice(-2);
+  const randomNum = Math.floor(10000 + Math.random() * 90000);
+  return `VMMP-${randomNum}${dateStr}`;
+};
+const formatWhatsAppNumber = (number) => {
+  let formatted = number.replace(/\D/g, '');
+  if (formatted.startsWith('0')) formatted = '62' + formatted.slice(1);
+  else if (!formatted.startsWith('62')) formatted = '62' + formatted;
+  return formatted;
+};
+
+// ==================== CONTEXTS ====================
+const DataContext = createContext();
+const AuthContext = createContext();
+const UIContext = createContext();
+const ToastContext = createContext();
+
+// ==================== UI COMPONENTS ====================
+const Button = ({ children, variant = 'default', size = 'default', className = '', ...props }) => {
+  const variants = {
+    default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+    destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+    outline: 'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700',
+    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+    ghost: 'hover:bg-accent hover:text-accent-foreground',
+  };
+  const sizes = { default: 'h-10 px-4 py-2', sm: 'h-9 px-3 text-sm', lg: 'h-11 px-8', icon: 'h-10 w-10' };
+  return <button className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`} {...props}>{children}</button>;
+};
+
+const Input = ({ className = '', ...props }) => (
+  <input 
+    className={`flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-900 dark:text-white ring-offset-background placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors ${className}`} 
+    {...props} 
+  />
+);
+
+const Label = ({ children, className = '', ...props }) => (
+  <label className={`text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 mb-1 block ${className}`} {...props}>{children}</label>
+);
+
+const Card = ({ children, className = '' }) => (
+  <div className={`rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-lg transition-colors duration-300 ${className}`}>{children}</div>
+);
+const CardHeader = ({ children, className = '' }) => <div className={`flex flex-col space-y-1.5 p-6 ${className}`}>{children}</div>;
+const CardTitle = ({ children, className = '' }) => <h3 className={`text-xl sm:text-2xl font-bold text-slate-900 dark:text-white ${className}`}>{children}</h3>;
+const CardContent = ({ children, className = '' }) => <div className={`p-6 sm:p-8 pt-0 ${className}`}>{children}</div>;
+
+const Dialog = ({ open, onClose, title, children, maxWidth = 'max-w-2xl' }) => {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeInUp" onClick={onClose}>
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className={`relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl w-full ${maxWidth} max-h-[90vh] overflow-hidden flex flex-col animate-fadeInUp`} onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h2>
+          <button onClick={onClose} className="rounded-sm opacity-70 hover:opacity-100 text-slate-500 dark:text-slate-400"><Icons.X className="w-5 h-5" /></button>
+        </div>
+        <div className="flex-1 overflow-y-auto scrollbar-thin p-6">{children}</div>
+      </div>
+    </div>
+  );
+};
+
+const StatusBadge = ({ status }) => {
+  const isLunas = status === 'lunas';
+  return <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border shadow-sm ${isLunas ? 'badge-lunas' : 'badge-baru'}`}>
+    <span className={`w-2 h-2 rounded-full ${isLunas ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
+    {isLunas ? 'LUNAS' : 'BARU'}
+  </span>;
+};
+
+const Toast = ({ message, type, onClose }) => {
+  useEffect(() => { const t = setTimeout(onClose, 3000); return () => clearTimeout(t); }, []);
+  const colors = { success: 'bg-green-500', error: 'bg-red-500', info: 'bg-blue-500' };
+  return (
+    <div className={`${colors[type]} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-fadeInUp min-w-[250px]`}>
+      <span className="flex-1 text-sm font-semibold">{message}</span>
+      <button onClick={onClose}><Icons.X className="w-4 h-4" /></button>
+    </div>
+  );
+};
+
+// ==================== LOGIN PAGE ====================
+const LoginPage = ({ onLogin }) => {
+  const [email, setEmail] = useState('admin@visualku.com');
+  const [password, setPassword] = useState('admin123');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setTimeout(() => {
+      if (email === 'admin@visualku.com' && password === 'admin123') {
+        onLogin({ nama: 'Admin VisualKu', role: 'super_admin', email });
+      } else if (email === 'staff@visualku.com' && password === 'staff123') {
+        onLogin({ nama: 'Staff VisualKu', role: 'staff', email });
+      } else {
+        setError('Email atau password salah!');
+      }
+      setLoading(false);
+    }, 600);
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-950 p-4 transition-colors duration-300">
+      <Card className="w-full max-w-md shadow-2xl animate-fadeInUp">
+        <CardContent className="p-8 space-y-6">
+          <div className="text-center space-y-2">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-primary flex items-center justify-center shadow-lg animate-floating">
+              <Icons.FileText className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">VisualKu OMS</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Order & Kasir Management System</p>
+          </div>
+          
+          {error && (
+            <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium text-center border border-red-200 dark:border-red-800">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-slate-700 dark:text-slate-300 tracking-normal normal-case font-semibold text-sm">Email</Label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@visualku.com" required />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-slate-700 dark:text-slate-300 tracking-normal normal-case font-semibold text-sm">Password</Label>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required />
+            </div>
+            <Button type="submit" className="w-full h-12 text-base font-bold mt-2" disabled={loading}>
+              {loading ? 'Memproses...' : 'Masuk ke Sistem'}
+            </Button>
+          </form>
+
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+            <p className="text-xs text-center text-slate-500 dark:text-slate-400 font-medium mb-2">Akun Demo:</p>
+            <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+              <div className="flex justify-between px-2"><span>admin@visualku.com</span><span className="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">admin123</span></div>
+              <div className="flex justify-between px-2"><span>staff@visualku.com</span><span className="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">staff123</span></div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+// ==================== LAYOUT ====================
+const menuItems = [
+  { path: 'form', label: 'Form Pesanan', icon: Icons.FileText },
+  { path: 'kasir', label: 'Kasir Printing', icon: Icons.Calculator },
+  { path: 'income', label: 'Income', icon: Icons.Dollar, locked: true },
+  { path: 'vendor', label: 'Vendor', icon: Icons.Users, locked: true },
+  { path: 'track', label: 'Track Order', icon: Icons.Search },
+];
+
+const Sidebar = () => {
+  const { sidebarOpen, setSidebarOpen, currentPage, setCurrentPage } = useContext(UIContext);
+  const { unlockedTabs } = useContext(AuthContext);
+  
+  return (
+    <>
+      {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+      <aside className={`fixed left-0 top-0 z-40 h-screen border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'} ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+        <div className="flex h-16 items-center justify-center border-b border-slate-200 dark:border-slate-800 px-4">
+          {sidebarOpen ? <h1 className="text-xl font-extrabold text-primary tracking-tight">VisualKu</h1> : <h1 className="text-xl font-extrabold text-primary">VK</h1>}
+        </div>
+        <nav className="mt-6 space-y-2 px-3">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = currentPage === item.path;
+            const isLocked = item.locked && !unlockedTabs.includes(item.path);
+            return (
+              <button key={item.path} onClick={() => { setCurrentPage(item.path); if (window.innerWidth < 1024) setSidebarOpen(false); }}
+                className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold transition-all ${isActive ? 'bg-primary text-primary-foreground shadow-md' : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`}>
+                <Icon className="w-5 h-5 flex-shrink-0" />
+                {sidebarOpen && <span className="truncate flex items-center gap-2">{item.label} {isLocked && <Icons.Lock className="w-3 h-3" />}</span>}
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+    </>
+  );
+};
+
+const Topbar = () => {
+  const { darkMode, setDarkMode, setSidebarOpen } = useContext(UIContext);
+  const { user, logout } = useContext(AuthContext);
+  
+  return (
+    <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 transition-colors duration-300">
+      <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-600 dark:text-slate-300"><Icons.Menu className="w-5 h-5" /></button>
+      <div className="flex-1">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white">Halo, {user?.nama}</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400">{new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      </div>
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="icon" onClick={() => setDarkMode(!darkMode)} className="text-slate-600 dark:text-slate-300">
+          {darkMode ? <Icons.Sun className="w-5 h-5" /> : <Icons.Moon className="w-5 h-5" />}
+        </Button>
+        <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+          <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">{user?.nama?.charAt(0)}</div>
+          <div className="hidden md:block">
+            <div className="text-sm font-bold text-slate-900 dark:text-white">{user?.nama}</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 capitalize">{user?.role}</div>
+          </div>
+          <Button variant="ghost" size="icon" onClick={logout} title="Logout" className="text-slate-600 dark:text-slate-300"><Icons.Logout className="w-4 h-4" /></Button>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+// ==================== PAGES ====================
+
+// 1. FORM PESANAN (Sama seperti sebelumnya, disingkat untuk fokus ke Kasir)
+const FormPage = () => {
+  const { toast } = useContext(ToastContext);
+  const [orderNumber, setOrderNumber] = useState(generateOrderNumber());
+  const [orderType, setOrderType] = useState('');
+  const [orderItems, setOrderItems] = useState([]);
+  const [editingItemId, setEditingItemId] = useState(null);
+  const [totalPrice, setTotalPrice] = useState('');
+  const [customer, setCustomer] = useState({ name: '', whatsapp: '', address: '', city: '' });
+  const [item, setItem] = useState({ category: '', sizeLength: '', sizeWidth: '', yBannerSize: '', aBannerSize: '', kalenderSize: '', notes: '', quantity: '', unit: '', design: '' });
+  const cities = ['Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta', 'Semarang', 'Medan', 'Palembang', 'Makassar', 'Denpasar', 'Balikpapan', 'Manado', 'Padang', 'Malang', 'Solo', 'Banjarmasin', 'Pontianak', 'Samarinda', 'Jambi', 'Pekanbaru', 'Batam'];
+
+  const handlePrintingCategoryChange = (cat) => setItem({ ...item, category: cat, sizeLength: '', sizeWidth: '', yBannerSize: '', aBannerSize: '', kalenderSize: '' });
+
+  const addItem = () => {
+    if (!customer.name || !customer.address || !customer.city || !customer.whatsapp) return toast('Lengkapi data pemesan!', 'error');
+    if (!orderType) return toast('Pilih tipe pesanan!', 'error');
+    let size = '';
+    if (orderType === 'printing') {
+      if (!item.category) return toast('Pilih kategori item!', 'error');
+      if (item.category === 'Banner/Spanduk') size = `${item.sizeLength}x${item.sizeWidth} cm`;
+      else if (item.category === 'Stand Banner Y/Rollup') size = item.yBannerSize;
+      else if (item.category === 'A Banner Kayu') size = item.aBannerSize;
+      else if (item.category === 'Kalender') size = item.kalenderSize;
+    }
+    if (!item.quantity || !item.unit || !item.design) return toast('Lengkapi jumlah, satuan, dan desain!', 'error');
+    const newItem = { id: editingItemId || Date.now(), type: orderType, category: orderType === 'printing' ? item.category : 'Jasa Desain', size, notes: item.notes, quantity: item.quantity, unit: item.unit, design: item.design };
+    if (editingItemId) { setOrderItems(orderItems.map(i => i.id === editingItemId ? newItem : i)); setEditingItemId(null); toast('Item berhasil diupdate!', 'success'); } 
+    else { setOrderItems([...orderItems, newItem]); toast('Item ditambahkan!', 'success'); }
+    setItem({ category: '', sizeLength: '', sizeWidth: '', yBannerSize: '', aBannerSize: '', kalenderSize: '', notes: '', quantity: '', unit: '', design: '' });
+  };
+
+  const removeItem = (id) => { setOrderItems(orderItems.filter(i => i.id !== id)); if (editingItemId === id) setEditingItemId(null); };
+  const resetForm = () => { setOrderNumber(generateOrderNumber()); setCustomer({ name: '', whatsapp: '', address: '', city: '' }); setOrderType(''); setOrderItems([]); setTotalPrice(''); setEditingItemId(null); setItem({ category: '', sizeLength: '', sizeWidth: '', yBannerSize: '', aBannerSize: '', kalenderSize: '', notes: '', quantity: '', unit: '', design: '' }); toast('Form telah direset! Siap buat pesanan baru 🎉', 'success'); };
+
+  const saveToFirebase = async (includePrice = false) => {
+    const orderData = { orderNumber, customer, items: orderItems, totalPrice: includePrice ? totalPrice : '0', orderType, status: 'baru', source: 'regular', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+    try { const docRef = await db.collection('orders').add(orderData); toast('Pesanan berhasil disimpan ke Firebase!', 'success'); return { ...orderData, id: docRef.id }; } 
+    catch (error) { toast('Gagal menyimpan ke Firebase', 'error'); return null; }
+  };
+
+  const sendWA = async (type) => {
+    if (!customer.whatsapp || (type === 'tagihan' && !totalPrice)) return toast('Lengkapi WhatsApp dan Harga!', 'error');
+    const savedOrder = await saveToFirebase(type === 'tagihan'); if (!savedOrder) return;
+    const firstName = customer.name.split(' ')[0]; const wa = formatWhatsAppNumber(customer.whatsapp);
+    const totalFmt = parseInt(totalPrice || 0).toLocaleString('id-ID');
+    const link = type === 'tagihan' ? `https://www.visualku.com/p/invoiceku.html?id=${orderNumber}` : `https://www.visualku.com/p/paidoff.html?id=${orderNumber}`;
+    let itemsText = orderItems.map((it, i) => `${i+1}. ${it.category} ${it.size ? '('+it.size+')' : ''}\n   Qty: ${it.quantity} ${it.unit}`).join('\n');
+    let msg = `Halo ${firstName}!\n\nTerima kasih telah memesan Jasa ${orderType === 'printing' ? 'Percetakan' : 'Desain'} di VisualKu.\n\nDETAIL ORDER\n------------------\nNomor Order: ${orderNumber}\nStatus: ${type === 'tagihan' ? 'Menunggu Pembayaran' : 'LUNAS - PROSES DIMULAI'}\n------------------\n\nDAFTAR PESANAN:\n${itemsText}\n\nRINCIAN PEMBAYARAN\n------------------\nTotal: Rp ${totalFmt}\n------------------\n\nLINK: ${link}\n\nMETODE PEMBAYARAN:\n- BCA: 5135365049 a/n MUHAMAD FAJAR\n- DANA: 085183147214 a/n MUHAMAD FAJAR\n\nTerima kasih atas kepercayaannya!\nTim VisualKu\nPT. VISUALKU META MEDIA`;
+    
+    if (type === 'konfirmasi') await db.collection('orders').doc(savedOrder.id).update({ status: 'lunas', paidAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+    window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
+    toast(type === 'tagihan' ? 'Tagihan terkirim!' : type === 'konfirmasi' ? 'Konfirmasi terkirim! Status LUNAS' : 'Ucapan terima kasih terkirim!', 'success');
+  };
+
+  return (
+    <div className="space-y-6 max-w-4xl mx-auto animate-fadeInUp">
+      <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+        <div className="inline-flex items-center gap-4 px-8 py-3 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-slate-200 dark:border-slate-700 shadow-sm animate-floating">
+          <span className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span>
+          <span className="whitespace-nowrap text-slate-700 dark:text-slate-200">Nomor Order: {orderNumber}</span>
+        </div>
+      </div>
+      <Card>
+        <CardHeader><CardTitle>Data Pemesan</CardTitle></CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="input-underline"><Label>Nama Pemesan</Label><Input value={customer.name} onChange={e => setCustomer({...customer, name: e.target.value})} placeholder="Tulis nama lengkap..." className="border-0 border-b-2 border-slate-200 dark:border-slate-700 bg-transparent focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 px-0" /></div>
+            <div className="input-underline"><Label>No. WhatsApp</Label><Input value={customer.whatsapp} onChange={e => setCustomer({...customer, whatsapp: e.target.value})} placeholder="08xxxxxxxxxx" className="border-0 border-b-2 border-slate-200 dark:border-slate-700 bg-transparent focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 px-0" /></div>
+            <div className="md:col-span-2 input-underline"><Label>Alamat</Label><textarea value={customer.address} onChange={e => setCustomer({...customer, address: e.target.value})} placeholder="Tulis alamat lengkap..." className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none" rows={2} /></div>
+            <div className="md:col-span-2 input-underline"><Label>Kota</Label>
+              <select value={customer.city} onChange={e => setCustomer({...customer, city: e.target.value})} className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white cursor-pointer appearance-none">
+                <option value="">Pilih Kota...</option>
+                {cities.map(c => <option key={c} value={c} className="bg-white dark:bg-slate-800">{c}</option>)}
+              </select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader><CardTitle>Tipe Pesanan</CardTitle></CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            {['design', 'printing'].map(type => (
+              <div key={type} onClick={() => setOrderType(type)} className={`cursor-pointer p-6 border-2 rounded-xl text-center transition-all ${orderType === type ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700'}`}>
+                <div className="text-3xl mb-2">{type === 'design' ? '🎨' : '🖨️'}</div>
+                <div className="font-bold text-slate-900 dark:text-white">{type === 'design' ? 'Jasa Desain' : 'Printing'}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{type === 'design' ? 'Desain grafis digital' : 'Cetak media fisik'}</div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+      {orderType === 'printing' && (
+        <Card>
+          <CardHeader><CardTitle>Detail Item Printing</CardTitle></CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2 input-underline"><Label>Kategori Item</Label>
+                <select value={item.category} onChange={e => handlePrintingCategoryChange(e.target.value)} className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white cursor-pointer appearance-none">
+                  <option value="">Pilih Kategori...</option>
+                  {['Banner/Spanduk', 'Stand Banner Y/Rollup', 'A Banner Kayu', 'Sticker', 'Brosur', 'Kalender', 'Mug Gelas', 'Lainnya'].map(c => <option key={c} value={c} className="bg-white dark:bg-slate-800">{c}</option>)}
+                </select>
+              </div>
+              {item.category === 'Banner/Spanduk' && (
+                <div className="md:col-span-2 grid grid-cols-2 gap-3">
+                  <div className="input-underline"><Label>Panjang (cm)</Label><Input type="number" value={item.sizeLength} onChange={e => setItem({...item, sizeLength: e.target.value})} className="border-0 border-b-2 border-slate-200 dark:border-slate-700 bg-transparent focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white px-0" /></div>
+                  <div className="input-underline"><Label>Lebar (cm)</Label><Input type="number" value={item.sizeWidth} onChange={e => setItem({...item, sizeWidth: e.target.value})} className="border-0 border-b-2 border-slate-200 dark:border-slate-700 bg-transparent focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white px-0" /></div>
+                </div>
+              )}
+              {item.category === 'Stand Banner Y/Rollup' && (
+                <div className="input-underline"><Label>Ukuran</Label>
+                  <select value={item.yBannerSize} onChange={e => setItem({...item, yBannerSize: e.target.value})} className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white">
+                    <option value="">Pilih Ukuran...</option>
+                    {['60x160', '80x180', '80x200'].map(s => <option key={s} value={s} className="bg-white dark:bg-slate-800">{s} cm</option>)}
+                  </select>
+                </div>
+              )}
+              {item.category === 'A Banner Kayu' && (
+                <div className="input-underline"><Label>Ukuran</Label>
+                  <select value={item.aBannerSize} onChange={e => setItem({...item, aBannerSize: e.target.value})} className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white">
+                    <option value="">Pilih Ukuran...</option>
+                    {['50x150', '100x150', '80x120', '50x100'].map(s => <option key={s} value={s} className="bg-white dark:bg-slate-800">{s} cm</option>)}
+                  </select>
+                </div>
+              )}
+              {item.category === 'Kalender' && (
+                <div className="input-underline"><Label>Ukuran</Label>
+                  <select value={item.kalenderSize} onChange={e => setItem({...item, kalenderSize: e.target.value})} className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white">
+                    <option value="">Pilih Ukuran...</option>
+                    {['A4', 'A3'].map(s => <option key={s} value={s} className="bg-white dark:bg-slate-800">{s}</option>)}
+                  </select>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      <Card>
+        <CardHeader><CardTitle>Detail Tambahan</CardTitle></CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2 input-underline"><Label>Keterangan</Label><textarea value={item.notes} onChange={e => setItem({...item, notes: e.target.value})} placeholder="Catatan tambahan..." className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none" rows={2} /></div>
+            <div className="input-underline"><Label>Jumlah</Label><Input type="number" value={item.quantity} onChange={e => setItem({...item, quantity: e.target.value})} placeholder="0" className="border-0 border-b-2 border-slate-200 dark:border-slate-700 bg-transparent focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white px-0" /></div>
+            <div className="input-underline"><Label>Satuan</Label>
+              <select value={item.unit} onChange={e => setItem({...item, unit: e.target.value})} className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white">
+                <option value="">Pilih...</option>
+                {['pcs', 'lembar', 'rim', 'box'].map(u => <option key={u} value={u} className="bg-white dark:bg-slate-800">{u}</option>)}
+              </select>
+            </div>
+            <div className="md:col-span-2 input-underline"><Label>Desain</Label>
+              <select value={item.design} onChange={e => setItem({...item, design: e.target.value})} className="w-full pb-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:outline-none focus-visible:ring-0 text-lg font-semibold text-slate-900 dark:text-white">
+                <option value="">Pilih...</option>
+                <option value="Tanpa desain" className="bg-white dark:bg-slate-800">Tanpa Desain</option>
+                <option value="Tambah Desain" className="bg-white dark:bg-slate-800">Tambah Desain</option>
+              </select>
+            </div>
+          </div>
+          <Button onClick={addItem} className="w-full mt-6 h-14 text-lg font-black bg-slate-900 dark:bg-slate-100 dark:text-slate-900 hover:bg-blue-600 dark:hover:bg-blue-400 transition-colors">
+            <Icons.Plus className="w-5 h-5 mr-2" /> {editingItemId ? 'Update Item' : 'Tambahkan Item'}
+          </Button>
+        </CardContent>
+      </Card>
+      {orderItems.length > 0 && (
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center flex-wrap gap-2">
+              <CardTitle>Daftar Pesanan ({orderItems.length})</CardTitle>
+              <Button variant="outline" size="sm" onClick={resetForm} className="btn-reset"><Icons.Refresh className="w-4 h-4 mr-2" /> Reset Pesanan</Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {orderItems.map((it) => (
+                <div key={it.id} className="animate-fadeInUp bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+                  <div className="flex justify-between items-start mb-3">
+                    <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.25em] ${it.design === 'Tanpa desain' ? 'badge-baru' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'}`}>{it.design}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div><span className="text-[10px] font-black uppercase tracking-[0.25em] text-blue-600 dark:text-blue-400 block mb-1">Kategori</span><span className="font-bold text-slate-900 dark:text-white">{it.category} {it.size ? `(${it.size})` : ''}</span></div>
+                    <div><span className="text-[10px] font-black uppercase tracking-[0.25em] text-blue-600 dark:text-blue-400 block mb-1">Jumlah</span><span className="font-bold text-slate-900 dark:text-white">{it.quantity} {it.unit}</span></div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" className="btn-edit flex-1" onClick={() => { setEditingItemId(it.id); setItem({ category: it.category, sizeLength: it.size?.split('x')[0] || '', sizeWidth: it.size?.split('x')[1]?.replace(' cm','') || '', yBannerSize: it.size || '', aBannerSize: it.size || '', kalenderSize: it.size || '', notes: it.notes, quantity: it.quantity, unit: it.unit, design: it.design }); window.scrollTo({top:0, behavior:'smooth'}); }}>Edit</Button>
+                    <Button variant="outline" size="sm" className="btn-hapus flex-1" onClick={() => removeItem(it.id)}>Hapus</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      {orderItems.length > 0 && (
+        <Card className="border-2 border-blue-100 dark:border-blue-900">
+          <CardContent className="p-6 sm:p-8">
+            <div className="input-underline mb-6"><Label>Total Harga (Rp)</Label><Input type="number" value={totalPrice} onChange={e => setTotalPrice(e.target.value)} placeholder="Masukkan total harga" className="border-0 border-b-2 border-slate-200 dark:border-slate-700 bg-transparent focus-visible:ring-0 text-3xl font-black text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 px-0" /></div>
+            <div className="grid grid-cols-3 gap-3">
+              <Button className="btn-tagihan h-14 font-black" onClick={() => sendWA('tagihan')}>Tagihan</Button>
+              <Button className="btn-konfirmasi h-14 font-black" onClick={() => sendWA('konfirmasi')}>Konfirmasi</Button>
+              <Button className="btn-terimakasih h-14 font-black" onClick={() => sendWA('terimakasih')}>Terima Kasih</Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+// 2. KASIR PRINTING PAGE (BARU - Fully Integrated)
+const KasirPage = () => {
+  const { toast } = useContext(ToastContext);
+  
+  // State
+  const [settings, setSettings] = useState({ normal: 35000, express: 45000, desain: 0 });
+  const [showPrices, setShowPrices] = useState({ normal: false, express: false });
+  const [items, setItems] = useState([{ id: genId(), jenis: 'Normal', lebar: '', tinggi: '', qty: 1 }]);
+  const [showMarginPopup, setShowMarginPopup] = useState(false);
+
+  // Constants from original script
+  const HARGA_TETAP = { "Y Banner": 160000, "Roll Banner": 450000 };
+  const MODAL = { "Normal": 17000, "Express": 35000, "Y Banner": 80000, "Roll Banner": 300000 };
+  const UKURAN_FIXED = { "Y Banner": { lebar: 60, tinggi: 160 }, "Roll Banner": { lebar: 60, tinggi: 160 } };
+
+  const roundUpTo50 = (val) => {
+    if (val <= 0) return 0;
+    const rounded = Math.ceil(val / 50) * 50;
+    return rounded < 100 ? 100 : rounded;
+  };
+
+  const addItem = () => {
+    setItems([...items, { id: genId(), jenis: 'Normal', lebar: '', tinggi: '', qty: 1 }]);
+  };
+
+  const removeItem = (id) => {
+    setItems(items.filter(i => i.id !== id));
+  };
+
+  const updateItem = (id, field, value) => {
+    setItems(items.map(i => i.id === id ? { ...i, [field]: value } : i));
+  };
+
+  // Calculations
+  const calculations = useMemo(() => {
+    let totalItem = items.length;
+    let totalLuasExact = 0;
+    let totalJualBanner = 0;
+    let totalModal = 0;
+    let detailRows = [];
+
+    items.forEach((item, idx) => {
+      const isFixed = item.jenis === 'Y Banner' || item.jenis === 'Roll Banner';
+      const qty = parseFloat(item.qty) || 0;
+      const modalSatuan = MODAL[item.jenis];
+      const modalBaris = qty * modalSatuan;
+      totalModal += modalBaris;
+
+      let jualBaris = 0;
+      let infoUkuran = "";
+      let luasExact = 0;
+
+      if (isFixed) {
+        jualBaris = qty * HARGA_TETAP[item.jenis];
+        const ukuran = UKURAN_FIXED[item.jenis];
+        infoUkuran = `${ukuran.lebar}×${ukuran.tinggi} cm (fixed)`;
+      } else {
+        const l = parseFloat(item.lebar) || 0;
+        const t = parseFloat(item.tinggi) || 0;
+        luasExact = (l / 100) * (t / 100) * qty;
+        totalLuasExact += luasExact;
+        
+        const lRound = roundUpTo50(l);
+        const tRound = roundUpTo50(t);
+        const luasRounded = (lRound / 100) * (tRound / 100) * qty;
+        
+        const hargaPerM2 = item.jenis === 'Normal' ? (parseFloat(settings.normal) || 0) : (parseFloat(settings.express) || 0);
+        jualBaris = luasRounded * hargaPerM2;
+        infoUkuran = `${l}×${t} cm → ${lRound}×${tRound} cm | ${luasExact.toFixed(2)} m² (abs) / ${luasRounded.toFixed(2)} m² (bill)`;
+      }
+
+      totalJualBanner += jualBaris;
+      detailRows.push({ idx: idx + 1, jenis: item.jenis, qty, infoUkuran, jualBaris, modalBaris });
+    });
+
+    const grandTotalJual = totalJualBanner + (parseFloat(settings.desain) || 0);
+    const untung = grandTotalJual - totalModal;
+    const margin = grandTotalJual > 0 ? ((untung / grandTotalJual) * 100).toFixed(1) : 0;
+
+    return { totalItem, totalLuasExact, totalJualBanner, totalModal, grandTotalJual, untung, margin, detailRows };
+  }, [items, settings]);
+
+  const handleDownload = () => {
+    const { totalModal, grandTotalJual, untung, margin, detailRows } = calculations;
+    const desain = parseFloat(settings.desain) || 0;
+    
+    let detailText = "";
+    detailRows.forEach(row => {
+      detailText += `${row.idx}. ${row.jenis} ${row.infoUkuran.split('|')[0].replace(' cm (fixed)', '')} × ${row.qty} = ${formatCurrency(row.jualBaris)} | Modal: ${formatCurrency(row.modalBaris)}\n`;
+    });
+
+    const text = `RINCIAN MARGIN KEUNTUNGAN (INTERNAL)\n` +
+                 `====================================\n` +
+                 `Tanggal: ${new Date().toLocaleString('id-ID')}\n\n` +
+                 `DETAIL ITEM:\n${detailText}\n` +
+                 `====================================\n` +
+                 `Total Modal      : ${formatCurrency(totalModal)}\n` +
+                 `Biaya Desain     : ${formatCurrency(desain)}\n` +
+                 `Total Tagihan    : ${formatCurrency(grandTotalJual)}\n` +
+                 `Keuntungan Bersih: ${formatCurrency(untung)}\n` +
+                 `Margin           : ${margin}%\n` +
+                 `====================================`;
+
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Rincian_Margin_${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    toast('File rincian berhasil diunduh!', 'success');
+  };
+
+  const openMarginPopup = () => {
+    const pass = prompt("Masukkan Password untuk melihat Margin:");
+    if (pass === "3000") {
+      setShowMarginPopup(true);
+    } else {
+      toast("Password salah! Akses ditolak.", "error");
+    }
+  };
+
+  return (
+    <div className="space-y-6 max-w-5xl mx-auto animate-fadeInUp">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">🧮 Kasir Printing</h1>
+        <p className="text-slate-500 dark:text-slate-400">Kalkulasi harga sistem Update 2026 - 2027</p>
+      </div>
+
+      {/* Global Settings Card */}
+      <Card>
+        <CardHeader><CardTitle>Pengaturan Global</CardTitle></CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="input-underline">
+              <Label>Harga Normal / m²</Label>
+              <div className="relative">
+                <Input 
+                  type="number" 
+                  value={settings.normal} 
+                  onChange={e => setSettings({...settings, normal: e.target.value})} 
+                  className={`pr-10 ${!showPrices.normal ? 'masked-text' : ''}`} 
+                />
+                <button 
+                  onClick={() => setShowPrices({...showPrices, normal: !showPrices.normal})}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                  title={showPrices.normal ? "Sembunyikan" : "Tampilkan"}
+                >
+                  {showPrices.normal ? <Icons.Eye className="w-5 h-5" /> : <Icons.EyeOff className="w-5 h-5" />}
+                </button>
+              </div>
+              {!showPrices.normal && <div className="flex items-center gap-2 mt-2 text-xs font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 w-fit px-2 py-1 rounded-md">🔒 Harga disembunyikan</div>}
+            </div>
+
+            <div className="input-underline">
+              <Label>Harga Express / m²</Label>
+              <div className="relative">
+                <Input 
+                  type="number" 
+                  value={settings.express} 
+                  onChange={e => setSettings({...settings, express: e.target.value})} 
+                  className={`pr-10 ${!showPrices.express ? 'masked-text' : ''}`} 
+                />
+                <button 
+                  onClick={() => setShowPrices({...showPrices, express: !showPrices.express})}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                  title={showPrices.express ? "Sembunyikan" : "Tampilkan"}
+                >
+                  {showPrices.express ? <Icons.Eye className="w-5 h-5" /> : <Icons.EyeOff className="w-5 h-5" />}
+                </button>
+              </div>
+              {!showPrices.express && <div className="flex items-center gap-2 mt-2 text-xs font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 w-fit px-2 py-1 rounded-md">🔒 Harga disembunyikan</div>}
+            </div>
+
+            <div className="input-underline">
+              <Label>Tambahan Biaya Desain (Rp)</Label>
+              <Input 
+                type="number" 
+                value={settings.desain} 
+                onChange={e => setSettings({...settings, desain: e.target.value})} 
+                placeholder="0"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Table Card */}
+      <Card>
+        <CardHeader><CardTitle>Detail Item Pesanan</CardTitle></CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
+            <table className="w-full text-sm min-w-[700px]">
+              <thead>
+                <tr className="bg-slate-900 dark:bg-slate-800 text-white">
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wider rounded-tl-lg">Jenis</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wider">Lebar (cm)</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wider">Tinggi (cm)</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wider">Qty</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wider">Luas / Info</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wider">Total</th>
+                  <th className="p-3 text-center font-semibold text-xs uppercase tracking-wider rounded-tr-lg">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
+                {items.map((item) => {
+                  const isFixed = item.jenis === 'Y Banner' || item.jenis === 'Roll Banner';
+                  const l = parseFloat(item.lebar) || 0;
+                  const t = parseFloat(item.tinggi) || 0;
+                  const qty = parseFloat(item.qty) || 0;
+                  
+                  let luasDisplay = "-";
+                  let hargaDisplay = "Rp0";
+
+                  if (isFixed) {
+                    const ukuran = UKURAN_FIXED[item.jenis];
+                    luasDisplay = <span className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-xs font-bold">{ukuran.lebar}×{ukuran.tinggi} cm</span>;
+                    hargaDisplay = formatCurrency(qty * HARGA_TETAP[item.jenis]);
+                  } else {
+                    const luasExact = (l / 100) * (t / 100) * qty;
+                    luasDisplay = `${luasExact.toFixed(2)} m²`;
+                    const lRound = roundUpTo50(l);
+                    const tRound = roundUpTo50(t);
+                    const luasRounded = (lRound / 100) * (tRound / 100) * qty;
+                    const hargaPerM2 = item.jenis === 'Normal' ? (parseFloat(settings.normal) || 0) : (parseFloat(settings.express) || 0);
+                    hargaDisplay = formatCurrency(luasRounded * hargaPerM2);
+                  }
+
+                  return (
+                    <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                      <td className="p-2">
+                        <select 
+                          value={item.jenis} 
+                          onChange={(e) => updateItem(item.id, 'jenis', e.target.value)}
+                          className="w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        >
+                          <option value="Normal">Normal</option>
+                          <option value="Express">Express</option>
+                          <option value="Y Banner">Y Banner</option>
+                          <option value="Roll Banner">Roll Banner</option>
+                        </select>
+                      </td>
+                      <td className="p-2">
+                        {!isFixed ? (
+                          <Input 
+                            type="number" 
+                            value={item.lebar} 
+                            onChange={(e) => updateItem(item.id, 'lebar', e.target.value)} 
+                            placeholder="0" 
+                            className="h-9 text-center"
+                          />
+                        ) : <span className="text-slate-400 text-xs">Fixed</span>}
+                      </td>
+                      <td className="p-2">
+                        {!isFixed ? (
+                          <Input 
+                            type="number" 
+                            value={item.tinggi} 
+                            onChange={(e) => updateItem(item.id, 'tinggi', e.target.value)} 
+                            placeholder="0" 
+                            className="h-9 text-center"
+                          />
+                        ) : <span className="text-slate-400 text-xs">Fixed</span>}
+                      </td>
+                      <td className="p-2">
+                        <Input 
+                          type="number" 
+                          value={item.qty} 
+                          onChange={(e) => updateItem(item.id, 'qty', e.target.value)} 
+                          min="1"
+                          className="h-9 text-center"
+                        />
+                      </td>
+                      <td className="p-2 font-semibold text-blue-600 dark:text-blue-400 text-xs">{luasDisplay}</td>
+                      <td className="p-2 font-bold text-slate-900 dark:text-white text-xs">{hargaDisplay}</td>
+                      <td className="p-2 text-center">
+                        <button onClick={() => removeItem(item.id)} className="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center mx-auto">
+                          <Icons.Trash className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <Button variant="outline" className="w-full mt-4 border-2 border-dashed border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-solid font-bold" onClick={addItem}>
+            <Icons.Plus className="w-4 h-4 mr-2" /> Tambah Item
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Summary Boxes */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="p-4 text-center hover:-translate-y-1 transition-transform">
+          <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Total Item</h3>
+          <h2 className="text-2xl font-black text-blue-600 dark:text-blue-400">{calculations.totalItem}</h2>
+        </Card>
+        <Card className="p-4 text-center hover:-translate-y-1 transition-transform">
+          <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Total Luas Banner</h3>
+          <h2 className="text-2xl font-black text-blue-600 dark:text-blue-400">{calculations.totalLuasExact.toFixed(2)} m²</h2>
+        </Card>
+        <Card className="p-4 text-center hover:-translate-y-1 transition-transform">
+          <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Biaya Desain</h3>
+          <h2 className="text-2xl font-black text-blue-600 dark:text-blue-400">{formatCurrency(settings.desain)}</h2>
+        </Card>
+        <Card className="p-4 text-center hover:-translate-y-1 transition-transform border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/10">
+          <h3 className="text-xs font-bold text-green-700 dark:text-green-400 uppercase tracking-wider mb-2">Total Tagihan</h3>
+          <h2 className="text-2xl font-black text-green-600 dark:text-green-400">{formatCurrency(calculations.grandTotalJual)}</h2>
+        </Card>
+      </div>
+
+      {/* Action Button */}
+      <div className="text-center mt-8">
+        <Button className="btn-margin h-14 px-12 text-base font-bold rounded-full shadow-lg shadow-green-500/30" onClick={openMarginPopup}>
+          <Icons.Calculator className="w-5 h-5 mr-2" /> Hitung Margin Keuntungan
+        </Button>
+      </div>
+
+      {/* Margin Popup Dialog */}
+      <Dialog open={showMarginPopup} onClose={() => setShowMarginPopup(false)} title="Rincian Margin Keuntungan" maxWidth="max-w-md">
+        <div className="space-y-4">
+          <div className="flex justify-between py-3 border-b border-slate-200 dark:border-slate-800">
+            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">Total Modal (Partnership)</p>
+            <b className="text-slate-900 dark:text-white">{formatCurrency(calculations.totalModal)}</b>
+          </div>
+          <div className="flex justify-between py-3 border-b border-slate-200 dark:border-slate-800">
+            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">Biaya Desain</p>
+            <b className="text-slate-900 dark:text-white">{formatCurrency(settings.desain)}</b>
+          </div>
+          <div className="flex justify-between py-3 border-b border-slate-200 dark:border-slate-800">
+            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">Total Tagihan (Customer)</p>
+            <b className="text-slate-900 dark:text-white">{formatCurrency(calculations.grandTotalJual)}</b>
+          </div>
+          <div className="flex justify-between py-3 border-b border-slate-200 dark:border-slate-800">
+            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">Keuntungan Bersih</p>
+            <b className={calculations.untung >= 0 ? 'profit-positive' : 'profit-negative'}>{formatCurrency(calculations.untung)}</b>
+          </div>
+          <div className="flex justify-between py-3">
+            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">Margin (%)</p>
+            <b className="text-blue-600 dark:text-blue-400 font-bold">{calculations.margin}%</b>
+          </div>
+
+          <div className="mt-6 pt-4 border-t-2 border-dashed border-slate-200 dark:border-slate-700">
+            <h4 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">📋 Rincian Per Item</h4>
+            <div className="space-y-3 max-h-48 overflow-y-auto scrollbar-thin pr-2">
+              {calculations.detailRows.length === 0 ? (
+                <p className="text-center text-slate-400 text-sm py-4">Belum ada item</p>
+              ) : calculations.detailRows.map((row, idx) => (
+                <div key={idx} className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-semibold text-slate-900 dark:text-white">{row.idx}. {row.jenis} × {row.qty}</span>
+                    <span className="font-bold text-slate-900 dark:text-white">{formatCurrency(row.jualBaris)}</span>
+                  </div>
+                  <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400 pl-4">
+                    <span>{row.infoUkuran} | Modal: {formatCurrency(row.modalBaris)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3 mt-6">
+            <Button className="btn-download h-12 font-bold" onClick={handleDownload}>
+              <Icons.Download className="w-4 h-4 mr-2" /> Download
+            </Button>
+            <Button variant="outline" className="h-12 font-bold bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 border-0" onClick={() => setShowMarginPopup(false)}>
+              Tutup
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+    </div>
+  );
+};
+
+// 3. INCOME PAGE (Sama seperti sebelumnya)
+const IncomePage = () => {
+  const { unlockedTabs, setUnlockedTabs, toast } = useContext(AuthContext);
+  const [password, setPassword] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [materialCost, setMaterialCost] = useState('');
+  const [shippingCost, setShippingCost] = useState('');
+  const [orders, setOrders] = useState([]);
+  const [incomeData, setIncomeData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const isUnlocked = unlockedTabs.includes('income');
+
+  useEffect(() => {
+    if (isUnlocked) {
+      setLoading(true);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+      const unsubscribeOrders = db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+        setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(o => { const d = new Date(o.createdAt); return d >= today && d < tomorrow; }));
+      });
+      const unsubscribeIncome = db.collection('income').onSnapshot(snapshot => {
+        setIncomeData(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setLoading(false);
+      });
+      return () => { unsubscribeOrders(); unsubscribeIncome(); };
+    }
+  }, [isUnlocked]);
+
+  const handleLogin = () => {
+    if (password === 'bilal100%') { setUnlockedTabs([...unlockedTabs, 'income']); toast('Income unlocked!', 'success'); } 
+    else { toast('Password salah!', 'error'); }
+  };
+
+  const openIncomeModal = (order) => { setSelectedOrder(order); setMaterialCost(''); setShippingCost(''); setShowModal(true); };
+
+  const saveIncome = async () => {
+    if (!selectedOrder) return;
+    const price = parseInt(selectedOrder.totalPrice || 0);
+    const material = parseInt(materialCost || 0);
+    const shipping = parseInt(shippingCost || 0);
+    const profit = price - (material + shipping);
+    const now = new Date();
+    try {
+      await db.collection('income').add({ orderId: selectedOrder.id, orderNumber: selectedOrder.orderNumber, price, material, shipping, profit, date: now.toISOString(), monthKey: `${now.getMonth()}-${now.getFullYear()}` });
+      setShowModal(false); toast('Laba berhasil disimpan ke Firebase!', 'success');
+    } catch (error) { toast('Gagal menyimpan laba', 'error'); }
+  };
+
+  const deleteOrder = async (id) => {
+    if (!confirm('Hapus pesanan ini dari Firebase?')) return;
+    try {
+      await db.collection('orders').doc(id).delete();
+      const incToDelete = incomeData.filter(inc => inc.orderId === id);
+      if (incToDelete.length > 0) { const batch = db.batch(); incToDelete.forEach(inc => batch.delete(db.collection('income').doc(inc.id))); await batch.commit(); }
+      toast('Pesanan dihapus dari Firebase', 'success');
+    } catch (error) { toast('Gagal menghapus', 'error'); }
+  };
+
+  if (!isUnlocked) {
+    return (
+      <div className="max-w-md mx-auto mt-20 animate-fadeInUp">
+        <Card><CardContent className="p-8 text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center"><Icons.Lock className="w-8 h-8 text-slate-400" /></div>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white">Akses Income</h3>
+          <Input type="password" placeholder="Masukkan Password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLogin()} />
+          <Button className="w-full" onClick={handleLogin}>Login</Button>
+        </CardContent></Card>
+      </div>
+    );
+  }
+
+  const monthlyData = incomeData.filter(inc => inc.monthKey === `${new Date().getMonth()}-${new Date().getFullYear()}`).sort((a,b) => new Date(b.date) - new Date(a.date));
+  const monthlyTotal = monthlyData.reduce((sum, i) => sum + i.profit, 0);
+
+  return (
+    <div className="space-y-6 max-w-6xl mx-auto animate-fadeInUp">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">💰 Income & Laporan</h1>
+        <Button variant="outline" className="btn-logout" onClick={() => setUnlockedTabs(unlockedTabs.filter(t => t !== 'income'))}><Icons.Logout className="w-4 h-4 mr-2" /> Logout</Button>
+      </div>
+      {loading ? <div className="text-center py-12"><div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div><p className="text-slate-500 dark:text-slate-400">Memuat data dari Firebase...</p></div> : (
+        <>
+          <Card>
+            <CardHeader><CardTitle>Semua Pesanan Hari Ini</CardTitle></CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead><tr className="border-b border-slate-200 dark:border-slate-800">{['No. Pesanan', 'Nama', 'Kota', 'Tanggal', 'Status', 'Total', 'Laba', 'Aksi'].map(h => <th key={h} className="text-left py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 whitespace-nowrap">{h}</th>)}</tr></thead>
+                  <tbody>
+                    {orders.length === 0 ? <tr><td colSpan="8" className="py-8 text-center text-slate-500 dark:text-slate-400">Belum ada data hari ini</td></tr> :
+                    orders.map(order => {
+                      const inc = incomeData.find(i => i.orderId === order.id);
+                      return (
+                        <tr key={order.id} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                          <td className="py-4 px-4 font-bold text-slate-900 dark:text-white">{order.orderNumber}</td>
+                          <td className="py-4 px-4 text-slate-700 dark:text-slate-300">{order.customer?.name}</td>
+                          <td className="py-4 px-4 text-slate-700 dark:text-slate-300">{order.customer?.city}</td>
+                          <td className="py-4 px-4 text-slate-700 dark:text-slate-300">{formatDate(order.createdAt)}</td>
+                          <td className="py-4 px-4"><StatusBadge status={order.status} /></td>
+                          <td className="py-4 px-4 font-bold text-slate-900 dark:text-white">{formatCurrency(order.totalPrice)}</td>
+                          <td className="py-4 px-4">{inc ? <span className={inc.profit >= 0 ? 'profit-positive' : 'profit-negative'}>{formatCurrency(inc.profit)}</span> : (order.status === 'lunas' ? <Button size="sm" className="btn-save" onClick={() => openIncomeModal(order)}>Input</Button> : <span className="text-slate-400">-</span>)}</td>
+                          <td className="py-4 px-4"><Button variant="ghost" size="icon" className="text-destructive hover:bg-red-50 dark:hover:bg-red-900/20" onClick={() => deleteOrder(order.id)}><Icons.Trash className="w-4 h-4" /></Button></td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-br from-blue-900 to-blue-600 text-white border-0">
+            <CardHeader><CardTitle className="text-white">Rekap Bulan Ini</CardTitle></CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead><tr><th className="text-left py-3 px-4 font-bold">Tanggal</th><th className="text-left py-3 px-4 font-bold">Order</th><th className="text-right py-3 px-4 font-bold">Pendapatan</th><th className="text-right py-3 px-4 font-bold">Biaya</th><th className="text-right py-3 px-4 font-bold">Laba</th></tr></thead>
+                  <tbody>
+                    {monthlyData.length === 0 ? <tr><td colSpan="5" className="py-4 text-center">Belum ada data</td></tr> : monthlyData.map(inc => (
+                      <tr key={inc.id} className="border-b border-white/20">
+                        <td className="py-3 px-4">{formatDate(inc.date)}</td>
+                        <td className="py-3 px-4 font-semibold">{inc.orderNumber}</td>
+                        <td className="py-3 px-4 text-right">{formatCurrency(inc.price)}</td>
+                        <td className="py-3 px-4 text-right">{formatCurrency(inc.material + inc.shipping)}</td>
+                        <td className={`py-3 px-4 text-right font-black ${inc.profit >= 0 ? 'text-green-300' : 'text-red-300'}`}>{formatCurrency(inc.profit)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot><tr className="border-t-2 border-white"><td colSpan="4" className="py-4 px-4 text-right font-black text-lg">TOTAL INCOME:</td><td className="py-4 px-4 text-right font-black text-2xl">{formatCurrency(monthlyTotal)}</td></tr></tfoot>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      )}
+      <Dialog open={showModal} onClose={() => setShowModal(false)} title="Input Laba Order" maxWidth="max-w-md">
+        <div className="space-y-4">
+          <div><p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Order</p><p className="font-bold text-lg text-slate-900 dark:text-white">{selectedOrder?.orderNumber}</p></div>
+          <div><p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Harga Jual</p><p className="font-bold text-green-600 dark:text-green-400 text-xl">{formatCurrency(selectedOrder?.totalPrice)}</p></div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="text-slate-700 dark:text-slate-300">Biaya Bahan (Rp)</Label><Input type="number" value={materialCost} onChange={e => setMaterialCost(e.target.value)} /></div>
+            <div><Label className="text-slate-700 dark:text-slate-300">Ongkir (Rp)</Label><Input type="number" value={shippingCost} onChange={e => setShippingCost(e.target.value)} /></div>
+          </div>
+          <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-slate-700 dark:text-slate-200">Laba Bersih:</span>
+              <span className={`text-2xl font-black ${(parseInt(selectedOrder?.totalPrice||0) - parseInt(materialCost||0) - parseInt(shippingCost||0)) >= 0 ? 'profit-positive' : 'profit-negative'}`}>
+                {formatCurrency(parseInt(selectedOrder?.totalPrice||0) - parseInt(materialCost||0) - parseInt(shippingCost||0))}
+              </span>
+            </div>
+          </div>
+          <Button className="w-full btn-save h-12 font-bold text-lg" onClick={saveIncome}>Simpan Laba ke Firebase</Button>
+        </div>
+      </Dialog>
+    </div>
+  );
+};
+
+// 4. VENDOR PAGE (Sama seperti sebelumnya)
+const VendorPage = () => {
+  const { unlockedTabs, setUnlockedTabs, toast } = useContext(AuthContext);
+  const [password, setPassword] = useState('');
+  const [selectedVendor, setSelectedVendor] = useState('');
+  const isUnlocked = unlockedTabs.includes('vendor');
+  const handleLogin = () => { if (password === 'bilal100%') { setUnlockedTabs([...unlockedTabs, 'vendor']); toast('Vendor unlocked!', 'success'); } else { toast('Password salah!', 'error'); } };
+  const prices = {
+    sapos: `<table class="w-full text-sm"><thead><tr class="bg-blue-600 dark:bg-blue-700 text-white"><th class="p-3 text-left">Jenis</th><th class="p-3 text-left">Harga</th><th class="p-3 text-left">Jual</th></tr></thead><tbody><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">FL/Banner Cina 280gr</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 17.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 35.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">FL/Banner Korea 440gr</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 35.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 70.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">Sticker Ritrama</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 80.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 160.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">Sticker Oneway</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 80.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 150.000/m²</td></tr><tr><td class="p-3 text-slate-900 dark:text-slate-200">Y-Banner STD</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 100.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 160.000/m²</td></tr><tr class="bg-slate-100 dark:bg-slate-800 font-bold"><td colspan="3" class="p-3 text-center text-slate-900 dark:text-slate-200">Senin - Sabtu | Jam 10.00 - 17.00 WITA</td></tr></tbody></table>`,
+    artprint: `<table class="w-full text-sm"><thead><tr class="bg-blue-600 dark:bg-blue-700 text-white"><th class="p-3 text-left">Jenis</th><th class="p-3 text-left">Harga</th><th class="p-3 text-left">Jual</th></tr></thead><tbody><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">FL/Banner Cina 280gr</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 16.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 35.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">FL/Banner Korea 440gr</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 35.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 70.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">Sticker Ritrama</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 80.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 160.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">Sticker Oneway</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 75.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 150.000/m²</td></tr><tr><td class="p-3 text-slate-900 dark:text-slate-200">Y-Banner STD</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 60.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 160.000/m²</td></tr></tbody></table>`,
+    asprint: `<table class="w-full text-sm"><thead><tr class="bg-blue-600 dark:bg-blue-700 text-white"><th class="p-3 text-left">Jenis</th><th class="p-3 text-left">Harga</th><th class="p-3 text-left">Jual</th></tr></thead><tbody><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">FL/Banner Cina 280gr</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 15.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 35.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">FL/Banner Korea 440gr</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 35.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 70.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">S.Ritrama</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 85.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 160.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">S.Ritrama Lmnsi</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 120.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 200.000/m²</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">Sticker Oneway</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 85.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 150.000/m²</td></tr><tr><td class="p-3 text-slate-900 dark:text-slate-200">Y-Banner STD</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 75.000/m²</td><td class="p-3 text-slate-900 dark:text-slate-200 font-bold">Rp. 160.000/m²</td></tr></tbody></table>`,
+    xpressprint: `<table class="w-full text-sm"><thead><tr class="bg-blue-600 dark:bg-blue-700 text-white"><th class="p-3 text-left">Jenis</th><th class="p-3 text-left">Harga</th></tr></thead><tbody><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">A3+ Ap 120gr (1 sisi)</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 3.000/lbr</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">A3+ Ap 120gr (2 sisi)</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 5.500/lbr</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">A3+ Ap 150gr (1 sisi)</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 3.500/lbr</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">A3+ Ap 150gr (2 sisi)</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 6.500/lbr</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">Sticker Bontak/Cromo</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 5.000/lbr</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">Sticker Bontak/Cromo Laminasi</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 8.000/lbr</td></tr><tr class="border-b dark:border-slate-700"><td class="p-3 text-slate-900 dark:text-slate-200">Sticker Vinyl</td><td class="p-3 text-slate-700 dark:text-slate-400">Rp. 15.000/lbr</td></tr><tr class="bg-slate-100 dark:bg-slate-800 font-bold"><td colspan="2" class="p-3 text-center text-slate-900 dark:text-slate-200">Ongkos Potong: Rp.1.000/A3+ Art Paper</td></tr><tr class="bg-slate-100 dark:bg-slate-800 font-bold"><td colspan="2" class="p-3 text-center text-slate-900 dark:text-slate-200">Cut Auto Pola: Rp.5.000/A3+ Sticker</td></tr></tbody></table>`
+  };
+
+  if (!isUnlocked) {
+    return (
+      <div className="max-w-md mx-auto mt-20 animate-fadeInUp">
+        <Card><CardContent className="p-8 text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center"><Icons.Lock className="w-8 h-8 text-slate-400" /></div>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white">Akses Pricelist Vendor</h3>
+          <Input type="password" placeholder="Masukkan Password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLogin()} />
+          <Button className="w-full" onClick={handleLogin}>Login</Button>
+        </CardContent></Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 max-w-4xl mx-auto animate-fadeInUp">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">📦 Daftar Harga Vendor</h1>
+        <Button variant="outline" className="btn-logout" onClick={() => { setUnlockedTabs(unlockedTabs.filter(t => t !== 'vendor')); setSelectedVendor(''); }}><Icons.Logout className="w-4 h-4 mr-2" /> Logout</Button>
+      </div>
+      <Card>
+        <CardContent className="p-6">
+          <select value={selectedVendor} onChange={e => setSelectedVendor(e.target.value)} className="w-full px-4 py-3 border-2 border-blue-500 dark:border-blue-400 rounded-lg focus:outline-none focus:border-blue-700 mb-6 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
+            <option value="" disabled>Pilih Vendor</option>
+            <option value="sapos">SAPOS Samarinda</option>
+            <option value="artprint">Art Print Samarinda</option>
+            <option value="asprint">ASPrint Samarinda</option>
+            <option value="xpressprint">XpressPrint Samarinda</option>
+          </select>
+          {selectedVendor && <div className="animate-fadeInUp overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700"><div dangerouslySetInnerHTML={{ __html: prices[selectedVendor] }} /></div>}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+// 5. TRACK ORDER PAGE (Sama seperti sebelumnya)
+const TrackPage = () => {
+  const { toast } = useContext(ToastContext);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [trackData, setTrackData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [manualPrice, setManualPrice] = useState('');
+
+  const trackOrder = async () => {
+    if (!searchQuery.trim()) return;
+    setLoading(true); setTrackData(null); setNotFound(false); setManualPrice('');
+    try {
+      let found = null;
+      const ordersSnap = await db.collection('orders').where('orderNumber', '==', searchQuery).limit(1).get();
+      if (!ordersSnap.empty) found = { id: ordersSnap.docs[0].id, ...ordersSnap.docs[0].data(), source: 'orders' };
+      else {
+        const vmmpSnap = await db.collection('vmmp').where('nomor_order', '==', searchQuery).limit(1).get();
+        if (!vmmpSnap.empty) {
+          const d = vmmpSnap.docs[0].data();
+          found = { id: vmmpSnap.docs[0].id, ...d, source: 'vmmp', orderNumber: d.nomor_order, customer: { name: d.nama_pemesan || '-', whatsapp: d.whatsapp || '-', address: d.alamat || '-', city: d.kota || '-' }, items: (d.pesanan || []).map(p => ({ category: p.kategori_cetak || p.item || 'Lainnya', size: p.ukuran || '', quantity: p.jumlah || 1, unit: p.satuan || 'pcs', design: p.desain || '-', notes: p.keterangan || '', type: 'printing' })), totalPrice: d.total_price || '0', orderType: 'printing', status: d.status || 'baru' };
+        }
+      }
+      if (!found) {
+        const vmmlSnap = await db.collection('vmml').where('nomor_pemesanan', '==', searchQuery).limit(1).get();
+        if (!vmmlSnap.empty) {
+          const d = vmmlSnap.docs[0].data();
+          let hargaPaket = 0;
+          if (d.paket?.includes('Temen')) hargaPaket = 500000; else if (d.paket?.includes('Orang Dalam')) hargaPaket = 300000; else if (d.paket?.includes('Bestie')) hargaPaket = 3500000;
+          found = { id: vmmlSnap.docs[0].id, ...d, source: 'vmml_logo', totalPrice: hargaPaket.toString(), orderType: 'design', status: d.status || 'baru', customer: { name: d.nama || '-', whatsapp: d.whatsapp || '-', address: '-', city: '-' }, items: [{ category: 'Desain Logo', size: '', quantity: 1, unit: 'pcs', design: d.paket || 'Logo Design', notes: `Brand: ${d.brand||'-'}\nSlogan: ${d.slogan||'-'}\nCerita Usaha:\n${d.cerita_usaha||'-'}\nWarna dan Gaya: ${d.warna_gaya||'-'}\nStyle: ${d.style_dominan||'-'}\nCatatan: ${d.catatan||'-'}`, type: 'design' }] };
+        }
+      }
+      if (found) { setTrackData(found); if (found.source === 'vmmp') setManualPrice(found.totalPrice || ''); } else { setNotFound(true); }
+    } catch (error) { toast('Gagal mencari data', 'error'); }
+    setLoading(false);
+  };
+
+  const sendTrackWA = async (type) => {
+    if (!trackData) return;
+    const customerName = (trackData.customer?.name || trackData.nama_pemesan || trackData.nama || 'Customer').split(' ')[0];
+    const whatsapp = trackData.customer?.whatsapp || trackData.whatsapp;
+    if (!whatsapp) return toast('Nomor WA tidak ditemukan!', 'error');
+    let totalPrice = trackData.totalPrice || '0';
+    const orderNumber = trackData.orderNumber || trackData.nomor_order || trackData.nomor_pemesanan;
+    
+    if (trackData.source === 'vmmp') {
+      if (manualPrice && manualPrice !== '0') totalPrice = manualPrice;
+      try {
+        await db.collection('vmmp').doc(trackData.id).update({ total_price: totalPrice, updatedAt: new Date().toISOString() });
+        await db.collection('orders').add({ orderNumber, customer: trackData.customer, items: trackData.items, totalPrice, orderType: 'printing', status: type === 'konfirmasi' ? 'lunas' : 'baru', source: 'vmmp', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), ...(type === 'konfirmasi' ? { paidAt: new Date().toISOString() } : {}) });
+      } catch (e) { console.error("VMMP Sync Error:", e); }
+    } else if (trackData.id) {
+      const updateData = type === 'konfirmasi' ? { status: 'lunas', paidAt: new Date().toISOString(), updatedAt: new Date().toISOString() } : { updatedAt: new Date().toISOString() };
+      const targetCollection = trackData.source === 'vmml_logo' ? 'vmml' : 'orders';
+      await db.collection(targetCollection).doc(trackData.id).update(updateData);
+      if (trackData.source === 'vmml_logo' && type === 'konfirmasi') await db.collection('orders').add({ orderNumber, customer: trackData.customer, items: trackData.items, totalPrice, orderType: 'design', status: 'lunas', source: 'vmml_logo', createdAt: new Date().toISOString(), paidAt: new Date().toISOString() });
+    }
+    if (type === 'konfirmasi') setTrackData({ ...trackData, status: 'lunas' });
+    
+    const totalFmt = parseInt(totalPrice).toLocaleString('id-ID');
+    const link = type === 'tagihan' ? `https://www.visualku.com/p/invoiceku.html?id=${orderNumber}` : `https://www.visualku.com/p/paidoff.html?id=${orderNumber}`;
+    let itemsText = (trackData.items || []).map((it, i) => `${i+1}. ${it.category} ${it.size ? '('+it.size+')' : ''}\n   Qty: ${it.quantity} ${it.unit}`).join('\n');
+    let msg = `Halo ${customerName}!\n\nTerima kasih telah memesan di VisualKu.\n\nDETAIL ORDER\n------------------\nNomor Order: ${orderNumber}\nStatus: ${type === 'tagihan' ? 'Menunggu Pembayaran' : 'LUNAS - PROSES DIMULAI'}\n------------------\n\nDAFTAR PESANAN:\n${itemsText}\n\nRINCIAN PEMBAYARAN\n------------------\nTotal: Rp ${totalFmt}\n------------------\n\nLINK: ${link}\n\nMETODE PEMBAYARAN:\n- BCA: 5135365049 a/n MUHAMAD FAJAR\n- DANA: 085183147214 a/n MUHAMAD FAJAR\n\nTerima kasih atas kepercayaannya!\nTim VisualKu\nPT. VISUALKU META MEDIA`;
+    
+    window.open(`https://wa.me/${formatWhatsAppNumber(whatsapp)}?text=${encodeURIComponent(msg)}`, '_blank');
+    toast(type === 'tagihan' ? 'Tagihan terkirim!' : type === 'konfirmasi' ? 'Konfirmasi terkirim!' : 'Ucapan terima kasih terkirim!', 'success');
+  };
+
+  return (
+    <div className="space-y-6 max-w-4xl mx-auto animate-fadeInUp">
+      <div><h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">🔍 Track Order</h1><p className="text-slate-500 dark:text-slate-400">Cari pesanan berdasarkan nomor order (VMMP, VMML, atau Regular)</p></div>
+      <Card><CardContent className="p-6">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Input placeholder="Contoh: VMMP-12345010426 atau VMML-xxxxx" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && trackOrder()} className="flex-1 h-14 text-lg font-semibold" />
+          <Button className="btn-search h-14 px-8 text-lg font-bold" onClick={trackOrder} disabled={loading}>{loading ? 'Mencari...' : <><Icons.Search className="w-5 h-5 mr-2" /> Cari Order</>}</Button>
+        </div>
+      </CardContent></Card>
+      {loading && <div className="text-center py-12"><div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div><p className="text-slate-500 dark:text-slate-400">Mencari data di Firebase...</p></div>}
+      {notFound && !loading && <Card className="border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/10"><CardContent className="p-12 text-center"><div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4"><Icons.Search className="w-10 h-10 text-red-600 dark:text-red-400" /></div><h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Order Tidak Ditemukan</h3><p className="text-slate-600 dark:text-slate-400">Nomor pesanan yang Anda masukkan tidak terdaftar dalam sistem.</p></CardContent></Card>}
+      {trackData && !loading && (
+        <Card className="border-2 border-blue-100 dark:border-blue-900 animate-fadeInUp">
+          <CardContent className="p-6 sm:p-8">
+            <div className="flex justify-between items-start mb-6 flex-wrap gap-4"><div><h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Detail Pesanan Ditemukan</h3><p className="text-slate-600 dark:text-slate-400 font-mono">{trackData.orderNumber || trackData.nomor_order || trackData.nomor_pemesanan}</p></div><StatusBadge status={trackData.status} /></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+              <div><p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Nama</p><p className="font-semibold text-slate-900 dark:text-white">{trackData.customer?.name || '-'}</p></div>
+              <div><p className="text-xs text-slate-500 dark:text-slate-400 mb-1">WhatsApp</p><p className="font-semibold text-slate-900 dark:text-white">{trackData.customer?.whatsapp || '-'}</p></div>
+              <div className="md:col-span-2"><p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Alamat</p><p className="font-semibold text-slate-900 dark:text-white">{trackData.customer?.address || '-'}</p></div>
+              <div className="md:col-span-2"><p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Kota</p><p className="font-semibold text-slate-900 dark:text-white">{trackData.customer?.city || '-'}</p></div>
+            </div>
+            <div className="mb-6">
+              <h4 className="font-bold text-slate-900 dark:text-white mb-3">Item Pesanan</h4>
+              <div className="space-y-3">{(trackData.items || []).map((item, index) => (<div key={index} className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700"><div className="font-bold text-slate-900 dark:text-white mb-2">{index + 1}. {item.category} {item.size ? `(${item.size})` : ''}</div><div className="text-sm text-slate-600 dark:text-slate-400 space-y-1"><div><strong>Jumlah:</strong> {item.quantity} {item.unit}</div><div><strong>Desain:</strong> {item.design}</div>{item.notes && <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700"><strong>Detail:</strong><br/><span dangerouslySetInnerHTML={{__html: item.notes.replace(/\n/g, '<br/>')}} /></div>}</div></div>))}</div>
+            </div>
+            {trackData.source === 'vmmp' && (
+              <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-800">
+                <Label>Atur Harga Manual (Khusus VMMP)</Label>
+                <Input type="number" value={manualPrice} onChange={e => setManualPrice(e.target.value)} className="text-2xl font-black border-blue-300 dark:border-blue-700 dark:bg-slate-800 dark:text-white focus:ring-blue-500" placeholder="Masukkan total harga dalam Rupiah" />
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Harga ini akan digunakan untuk tagihan & konfirmasi. Order akan disinkronkan ke koleksi 'orders' untuk laporan Income.</p>
+              </div>
+            )}
+            <div className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl mb-6 border border-blue-100 dark:border-blue-800">
+              <span className="font-bold text-slate-700 dark:text-slate-200">Total Pembayaran</span>
+              <span className="text-2xl font-black text-blue-600 dark:text-blue-400">{formatCurrency(trackData.source === 'vmmp' ? (manualPrice || 0) : (trackData.totalPrice || 0))}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <Button className="btn-tagihan h-14 font-black" onClick={() => sendTrackWA('tagihan')}>Tagihan</Button>
+              <Button className="btn-konfirmasi h-14 font-black" onClick={() => sendTrackWA('konfirmasi')}>Konfirmasi</Button>
+              <Button className="btn-terimakasih h-14 font-black" onClick={() => sendTrackWA('terimakasih')}>Terima Kasih</Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+// ==================== MAIN APP ====================
+const App = () => {
+  const [user, setUser] = useState(null);
+  const [currentPage, setCurrentPage] = useState('form');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
+  const [unlockedTabs, setUnlockedTabs] = useState([]);
+  const [toasts, setToasts] = useState([]);
+
+  useEffect(() => {
+    if (darkMode) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
+
+  const toast = (message, type = 'info') => {
+    const id = genId();
+    setToasts(t => [...t, { id, message, type }]);
+  };
+  const removeToast = (id) => setToasts(t => t.filter(x => x.id !== id));
+  const logout = () => { setUser(null); setCurrentPage('form'); setUnlockedTabs([]); };
+
+  if (!user) {
+    return (
+      <AuthContext.Provider value={{ user, logout, unlockedTabs, setUnlockedTabs, toast }}>
+        <ToastContext.Provider value={{ toast }}>
+          <LoginPage onLogin={setUser} />
+          <div className="fixed bottom-4 right-4 z-50 space-y-2">
+            {toasts.map(t => <Toast key={t.id} {...t} onClose={() => removeToast(t.id)} />)}
+          </div>
+        </ToastContext.Provider>
+      </AuthContext.Provider>
+    );
+  }
+
+  return (
+    <AuthContext.Provider value={{ user, logout, unlockedTabs, setUnlockedTabs, toast }}>
+      <UIContext.Provider value={{ sidebarOpen, setSidebarOpen, darkMode, setDarkMode, currentPage, setCurrentPage }}>
+        <ToastContext.Provider value={{ toast }}>
+          <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+            <Sidebar />
+            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-16'}`}>
+              <Topbar />
+              <main className="p-4 sm:p-6 lg:p-8">
+                {currentPage === 'form' && <FormPage />}
+                {currentPage === 'kasir' && <KasirPage />}
+                {currentPage === 'income' && <IncomePage />}
+                {currentPage === 'vendor' && <VendorPage />}
+                {currentPage === 'track' && <TrackPage />}
+              </main>
+              <footer className="py-8 text-center text-slate-400 dark:text-slate-600 text-[10px] font-black tracking-[0.3em] uppercase border-t border-slate-200 dark:border-slate-800 px-4">
+                &copy; 2026 PT. VISUALKU META MEDIA
+              </footer>
+            </div>
+            <div className="fixed bottom-4 right-4 z-50 space-y-2">
+              {toasts.map(t => <Toast key={t.id} {...t} onClose={() => removeToast(t.id)} />)}
+            </div>
+          </div>
+        </ToastContext.Provider>
+      </UIContext.Provider>
+    </AuthContext.Provider>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>
